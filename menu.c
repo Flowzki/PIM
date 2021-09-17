@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<math.h>
-#include<stdlib.h>
 
 
 void cadastro(cadastros){
@@ -48,14 +47,7 @@ int main(){
 	
 	
 	
-	/*system("mkdir c:\\\"SISTEMA DE GESTAO OLIMPIADA\"");
-	system("cd c:\\\"SISTEMA DE GESTAO OLIMPIADA\"");
-	system("type nul > teste.txt");*/
 	
-	/*FILE *fp;
-	
-	fp = fopen("teste.txt", "w");
-	fclose(fp);*/
 	
 	printf("Menu principal \n \n");
 	printf(" [1] Cadastrar \n [2] Calendario Olimpico \n [3] Premiacao \n [4] Relatorios \n \n");
