@@ -4,100 +4,216 @@
 #include<Windows.h>
 #include<string.h>
 #include<direct.h>
+#include<stdlib.h>
+
+
+
+typedef struct AtletasCadastrados{
+	int idNUms;
+	char nomes[100];
+	char sobrenomes[100];
+	char modalidades[100];
+	char paises[100];
+	
+}AtletasCad;
+
+typedef struct Atletas{
+	int idNUm;
+	char nome[100];
+	char sobrenome[100];
+	char modalidade[100];
+	char pais[100];
+	
+}Atleta;
+
+
+AtletasCad atletas[256];
+
 
 void cadastro(int opcao)
 {
 	
-	FILE *atletas;
+	system("cls");
+
+	Atleta atleta[100];
 	
-	struct atlet{
-		char nome[40];
-		char sobrenome[40];
-		char modalidade[40];
-		char pais[40];
-	};
+	FILE *atletasSalvar;
 	
-	struct atlet atleta;
-	
-	int ver, confirma;
+	int ver, confirma, i, quantAtlet;
 	char sair;
 	
-	fopen("C:\\Gestao Olimpiada/atletas.txt","a");
-
+	atletasSalvar = fopen("C:/Gestao Olimpiada/atletas.txt","a");
+		
 	if(opcao == 1)
+	{
+		
+		if(atletasSalvar != NULL)
 		{
+		
 			printf("Prencha os campos abaixo para cadastro de atleta \n\n");
+			printf("Informe quantos atletas deseja cadastrar:\n");
+			scanf("%d", &quantAtlet);
 			
-			do
+			if(quantAtlet > 0)
 			{
-				printf("Nome: \n");
-				scanf("%s", &atleta.nome);
 				
-				printf("Sobrenome: \n");
-				scanf("%s", &atleta.sobrenome);
-				
-				printf("Modalidade: \n");
-				scanf("%s", &atleta.modalidade);
-				
-				printf("País: \n");
-				scanf("%s", &atleta.pais);
-				
-				system("cls");
-				printf("Deseja visualizar as informações inseridas digite 1 para SIM e 0 para NÂO \n?");
-				scanf("%d", &ver);
-				
-				if(ver == 1)
-					{
-						printf("Os dados informados foram \n");
-						printf("Nome: %s \n",atleta.nome);
-						printf("Sobrenome: %s \n", atleta.sobrenome);
-						printf("Modalidade: %s \n",atleta.modalidade);
-						printf("País: %s \n",atleta.pais);
-						
-						printf("Confirma as informações digite 1 para SIM e 0 para NÂO ? ");
-						scanf("%d", &confirma);
-						
-					}
-				else if(ver < 0 || ver > 1)
-						printf("Opção inválida! \n");
-
-				else
+				for(i=0;i<quantAtlet;i++)
 				{
-						printf("Confirma as informações digite 1 para SIM e 0 para NÂO ? ");
-						scanf("%d", &confirma);	
-						
-						if(confirma == 1)
-							{
+					printf("ID: \n");
+					scanf("%d", &atleta[i].idNUm);
+					
+					printf("Nome: \n");
+					scanf("%s", &atleta[i].nome);
+					
+					printf("Sobrenome: \n");
+					scanf("%s", &atleta[i].sobrenome);
+					
+					printf("Modalidade: \n");
+					scanf("%s", &atleta[i].modalidade);
+					
+					printf("País: \n");
+					scanf("%s", &atleta[i].pais);
+					
+					system("cls");
+					printf("Deseja visualizar as informações inseridas?\nDigite 1 para SIM e 0 para NÂO: \n");
+					scanf("%d", &ver);
+					
+					if(ver == 1)
+						{
+							printf("\nOs dados informados foram: \n\n");
+							printf("Id: %d \n",atleta[i].idNUm);
+							printf("Nome: %s \n",atleta[i].nome);
+							printf("Sobrenome: %s \n", atleta[i].sobrenome);
+							printf("Modalidade: %s \n",atleta[i].modalidade);
+							printf("País: %s \n",atleta[i].pais);
 							
-	
-							    //FILE *teste = fopen("C:\\Gestao Olimpiada/atletas.txt","a");
-								FILE *atletas = fopen("atletas.txt","w+");	
-							    
-							    if(atletas )
-							    {
-							    	fprintf("----------------Atleta----------------------- \n", atletas);
-		     						 fprintf("Nome: %s \n",atleta.nome, atletas);
-		     						 fprintf("Sobrenome: %s \n",atleta.sobrenome, atletas);
-		     						 fprintf("modalidade: %s \n ",atleta.modalidade, atletas);
-		     						 fprintf("Pais: %s \n",atleta.pais, atletas);
-		     						 fprintf("----------------------------------------------\n", atletas);
-		     						 fclose(atletas);
+							printf("\n");
+							printf("Confirma as informações?\nDigite 1 para SIM e 0 para NÂO:\n");
+							scanf("%d", &confirma);
+							
+							if(confirma == 1)
+								{   
+								    if(atletasSalvar != NULL)
+								    {
+								    	 fprintf(atletasSalvar, "----------------Atleta------------------------\n");
+								    	 fprintf(atletasSalvar, "%d \n", atleta[i].idNUm);
+			     						 fprintf(atletasSalvar, "%s\n",atleta[i].nome);
+			     						 fprintf(atletasSalvar, "%s\n",atleta[i].sobrenome);
+			     						 fprintf(atletasSalvar, "%s\n",atleta[i].modalidade);
+			     						 fprintf(atletasSalvar, "%s\n",atleta[i].pais);
+			     						 fprintf(atletasSalvar, "----------------------------------------------\n");
+			     						 
+			     						 
+			     						 system("cls");
+			     						 printf("Dados salvos com sucesso!\n\n");
+			     						 
+			     						 	if(i+1 == quantAtlet)
+												{
+													sleep(2);
+													fclose(atletasSalvar);
+													main();	
+												}		
+									}
+									else
+									{
+										 system("cls");
+										 printf("Não foi possível salvar os dados!\n\n");
+										 sleep(2);
+										 main();
+									}
+							
 								}
-							 
-						    	
-							}
+								else
+									{
+										 system("cls");
+										 printf("Os dados não foram salvos!\n");
+										 printf("Insira os dados novamente.\n\n");
+										 i--;
+									}
+						
+						
+						}
+						else if(ver < 0 || ver > 1)
+						{
+							system("cls");
+							printf("Opção inválida! \n");
+							sleep(2);
+							main();
+						}
+						else
+						{
+							printf("\n");
+							printf("Confirma as informações?\nDigite 1 para SIM e 0 para NÂO:\n");
+							scanf("%d", &confirma);	
+							
+							if(confirma == 1)
+								{   
+								    if(atletasSalvar != NULL)
+								    {
+								    	 fprintf(atletasSalvar, "----------------Atleta------------------------\n");
+								    	 fprintf(atletasSalvar, "%d \n", atleta[i].idNUm);
+			     						 fprintf(atletasSalvar, "%s \n",atleta[i].nome);
+			     						 fprintf(atletasSalvar, "%s\n",atleta[i].sobrenome);
+			     						 fprintf(atletasSalvar, "%s\n",atleta[i].modalidade);
+			     						 fprintf(atletasSalvar, "%s \n",atleta[i].pais);
+			     						 fprintf(atletasSalvar, "----------------------------------------------\n");
+			     						 
+			     						 
+			     						 system("cls");
+			     						 printf("Dados salvos com sucesso!\n\n");
+			     						 
+			     						 
+			     						 if(i+1 == quantAtlet)
+											{
+												sleep(2);
+												fclose(atletasSalvar);
+												main();	
+											}	
+									    
+			     						 
+									}
+									else
+									{
+										 system("cls");
+										 printf("Não foi possível salvar os dados!\n");
+										 sleep(2);
+										 main();
+									}
+									
+								}
+								else
+									{
+										 system("cls");
+										 printf("Os dados não foram salvos!\n");
+										 printf("Insira os dados novamente.\n\n");
+										 i--;
+									}
+	     					
+						}
 							
 							
-     						
-     					
+							if(i+1 == quantAtlet)
+							{
+								fclose(atletasSalvar);	
+							}		
+					
 				}
-							
+						
+			}
+			else
+			{
 				
-			}while(sair != 's' || sair != 'S');
-			
+				 system("cls");
+				 printf("Insira uma quantidade maior que zero!\n");
+				 sleep(2);
+				 main();
+									
+			}
 		}
-	
+	}
+		
 }
+
 
 
 void cadastros(int cadastros){
@@ -144,6 +260,7 @@ void cadastros(int cadastros){
 				
 			default:
 				printf(" Opcao invalida");
+				main();
 				break;					
 		}
 		
@@ -223,6 +340,8 @@ int main(char usuario[], char senha[] ){
 	setlocale(LC_ALL, "portuguese");
 	system("cls");
 	
+
+	
 	if( _mkdir( "\\Gestao Olimpiada\\" ) == 0 )
    {
       //printf( "Directory '\\\"Gestao Olimpiada\"' was successfully created\n" );
@@ -231,14 +350,15 @@ int main(char usuario[], char senha[] ){
    }
   
 
-		fopen("C:\\Gestao Olimpiada/teste.txt","a");
+		fopen("C:/Gestao Olimpiada/atletas.txt","a");
+		fopen("C:/Gestao Olimpiada/funcionarios.txt","a");
+		fopen("C:/Gestao Olimpiada/medicos.txt","a");
+		fopen("C:/Gestao Olimpiada/calendario.txt","a");
+		fopen("C:/Gestao Olimpiada/premiacao.txt","a");
+		fopen("C:/Gestao Olimpiada/rankingMedalhas.txt","a");
+		fopen("C:/Gestao Olimpiada/equipeMedica.txt","a");
      
-     		menuprincipal();
-	
-	
-
-	
-	
+     	menuprincipal();
 	
 	
 	
