@@ -18,7 +18,9 @@ typedef struct{
 typedef struct{
 	int idNUm;
 	char modalidades[40];
-	
+	int medalhasOuro;
+	int medalhasPrata;
+	int meadlhasbronze;
 }Modalidades;
 
 
@@ -109,48 +111,80 @@ void cadastroAtletas(){
 
 	FILE *atletasSalvar;
 	FILE *paises;
+	FILE *modalidade;
 	
-	int ver, confirma, i, quantAtlet, size, ultPais, j, contador=0, opcaoPais;
+	int ver, confirma, i, quantAtlet, size, ultPais, j, contador=0, opcaoPais, ultMod, OpMod;
 	Atleta atletas;
 	Paises paisess;
 	Paises paise[100];
+	Modalidades modalidades[100];
+	Modalidades mods;
 	int ultimoId=0;
 	
 	char nomeArqu[40] = "C:/Gestao Olimpiada/atletas.txt";
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
+	char modal[40] = "C:/Gestao Olimpiada/modalidades.txt";
 	
 	atletasSalvar = fopen(nomeArqu,"a+");
 	
+		if(get_size(modal)==0)
+		{
+			printf("Nenhuma modalidade cadastrado!!\n");
+			sleep(2);
+			main();
+		}
+		else
+		{
+			
+			modalidade = fopen(modal, "r");
+			fseek(modalidade, -1*sizeof(Modalidades),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&mods, sizeof(Modalidades), 1, modalidade); //ler o ultimo registro
+  			ultMod = mods.idNUm;
+  				
+  				//printf ("id = %d ", ultPais); 
+  				
+			rewind(modalidade);
+		
+			while(!feof(modalidade))
+				{
+					fread(&mods, sizeof(Modalidades),1,modalidade);
+					modalidades[contador] = mods;
+					contador++;
+				}
+				
+				fclose(modalidade);
+		}
+		
+	
+		contador = 0;
 
-		if(get_size(pais)==0){
-					printf("Nenhum pais cadastrado!!\n");
-					sleep(2);
-					main();
+		if(get_size(pais)==0)
+		{
+			printf("Nenhum pais cadastrado!!\n");
+			sleep(2);
+			main();
+		}
+		else
+		{
+			
+			paises = fopen(pais, "r");
+			fseek(paises, -1*sizeof(Paises),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&paisess, sizeof(Paises), 1, paises); //ler o ultimo registro
+  				ultPais = paisess.idNUm;
+  				
+  				//printf ("id = %d ", ultPais); 
+  				
+			rewind(paises);
+		
+			while(!feof(paises))
+				{
+					fread(&paisess, sizeof(Paises),1,paises);
+					paise[contador] = paisess;
+					contador++;
 				}
-				else{
-					
-					paises = fopen(pais, "r");
-					fseek(paises, -1*sizeof(Paises),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
-   				 	fread(&paisess, sizeof(Paises), 1, paises); //ler o ultimo registro
-   					ultPais = paisess.idNUm;
-   					
-   					//printf ("id = %d ", ultPais); 
-   					
-					rewind(paises);
 				
-					while(!feof(paises)){
-						fread(&paisess, sizeof(Paises),1,paises);
-						paise[contador] = paisess;
-						contador++;
-									
-						
-					}
-				
-					
-					fclose(paises);
-					
-					
-				}
+				fclose(paises);
+		}
 
 
 		if(atletasSalvar != NULL)
@@ -202,15 +236,40 @@ void cadastroAtletas(){
 					printf("Sobrenome: \n");
 					scanf("%s", &atleta[i].sobrenome);
 					
-					printf("Modalidade: \n");
-					scanf("%s", &atleta[i].modalidade);
+					contador = 0;
 					
-					printf("Escolha um pais:\n\n");
+					printf("Modalidade: \n\n");
+					
+					while(contador<ultMod)
+					{	
+						printf("[%d] %s\n", contador+1, modalidades[contador].modalidades);
+						contador++;
+						
+					}
+					
+					printf("\n");
+					printf("Escolha uma modalidade:\n");	
+					scanf("%d", &OpMod);
+					
+					if(OpMod > 0 && OpMod <= ultMod)
+					{
+						strcpy(atleta[i].modalidade , modalidades[OpMod].modalidades);
+					}
+					else{
+						printf("Opção inválida!!\n");
+						sleep(2);
+						main();
+					}
+					
+					printf("\n");	
+					printf("País:\n\n");
+					
 					while(j<ultPais){
 						printf("[%d] %s\n", j+1, paise[j].nomes);
 						j++;
 						
 					}
+					
 					printf("\n");
 					printf("Escolha um país:\n");	
 					scanf("%d", &opcaoPais);
@@ -224,10 +283,7 @@ void cadastroAtletas(){
 						sleep(2);
 						main();
 					}
-					
-					//printf("País: \n");
-					
-					
+						
 					system("cls");
 					printf("Deseja visualizar as informações inseridas?\nDigite 1 para SIM e 0 para NÂO: \n");
 					scanf("%d", &ver);
@@ -284,8 +340,8 @@ void cadastroAtletas(){
 									{
 										 system("cls");
 										 printf("Os dados não foram salvos!\n");
-										 printf("Insira os dados novamente.\n\n");
-										 i--;
+										 //printf("Insira os dados novamente.\n\n");
+										 i = quantAtlet;
 									}
 						
 						
@@ -344,8 +400,8 @@ void cadastroAtletas(){
 									{
 										 system("cls");
 										 printf("Os dados não foram salvos!\n");
-										 printf("Insira os dados novamente.\n\n");
-										 i--;
+										// printf("Insira os dados novamente.\n\n");
+										 i = quantAtlet;
 									}
 	     					
 						}
@@ -354,6 +410,7 @@ void cadastroAtletas(){
 							if(i+1 == quantAtlet)
 							{
 								fclose(atletasSalvar);	
+								main();
 							}		
 					
 				}
@@ -661,8 +718,7 @@ void alojamentos(){
 }
 
 
-void cadastro(int opcao)
-{
+void cadastro(int opcao){
 	
 	switch(opcao)
 	{
@@ -767,13 +823,24 @@ void cadastros(int cadastros){
 	
 void calendario(){
 	printf("Calendario Olimpico \n");
+	sleep(4);
+	main();
 }	
 
 
 void premiacao(){
-	printf(" Premiacao \n ");
+	printf("Premiacao \n ");
+	sleep(4);
+	main();
 }
 
+
+void menuRelatorios(int opcao){
+	system("cls");
+	printf("Relatórios.\n");
+	sleep(3);
+	main();
+}
 
 void menuprincipal()
 {
@@ -796,23 +863,29 @@ void menuprincipal()
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   CADASTROS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Cadastro de Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojmentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Voltar \n\n");
-						printf("Escolha uma das opcoes: \n");
+						printf(" [1] Cadastro de Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Voltar \n\n");
+						printf(" Escolha uma das opcoes: \n");
 						scanf("%d", &cadastro);
 						
 						if(cadastro > 0 && cadastro < 8)
 							cadastros(cadastro);	
-						else
+						else if(cadastro == 8)
+						{
+							//sleep(1);
+							main();
+						}
+						else{
 							printf("Opção inválida!!\n");
 							sleep(2);
 							main();
+						}
+							
 						
 						break;
 						
 					case 2:
 						system("cls");
 						calendario();
-					
 						break;
 						
 					case 3:
@@ -825,9 +898,19 @@ void menuprincipal()
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   RELATORIOS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Ranking dos países \n [3] Resumo por atleta \n [4] Total de medalhas por categoria \n ");
+						printf(" [1] Ranking dos países \n [2] Resumo por atleta \n [3] Total de medalhas por categoria \n\n");
 						printf("Escolha uma opção:\n");
 						scanf("%d", &relatorios);
+						
+						if(relatorios > 0 && relatorios < 4)
+							menuRelatorios(relatorios);
+						else
+						{
+							printf("Opção inválida.\n");
+							sleep(2);
+							main();	
+						}
+							
 						break;
 					
 					default:
