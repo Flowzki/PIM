@@ -8,7 +8,7 @@
 
 typedef struct{
 	int idNUm;
-	char nomes[40];
+	char nomes[20];
 	int medalhasOuro;
 	int medalhasPrata;
 	int meadlhasbronze;
@@ -17,20 +17,18 @@ typedef struct{
 
 typedef struct{
 	int idNUm;
-	char modalidades[40];
+	char modalidades[20];
 	int medalhasOuro;
 	int medalhasPrata;
 	int meadlhasbronze;
 }Modalidades;
 
-
-
 typedef struct{
 	int idNUm;
-	char nome[40];
-	char sobrenome[40];
-	char modalidade[40];
-	char pais[40];
+	char nome[20];
+	char sobrenome[20];
+	char modalidade[20];
+	char pais[20];
 	int medalhasOuro;
 	int medalhasPrata;
 	int meadlhasbronze;
@@ -39,54 +37,54 @@ typedef struct{
 
 typedef struct{
 	int idNUm;
-	char nomes[40];
-	char sobrenomes[40];
-	char funcao[40];
-	char pais[40];
+	char nomes[20];
+	char sobrenomes[20];
+	char funcao[20];
+	char pais[20];
 }Funcionarios;
 
 typedef struct{
 	int idNUm;
-	char nomes[40];
-	char sobrenomes[40];
-	char pais[40];
+	char nomes[20];
+	char sobrenomes[20];
+	char pais[20];
 }Medicos;
 
 typedef struct{
 	int idNUm;
-	char nome[40];
-	char sobrenome[40];
-	char funcao[40];
-	char pais[40];
+	char nome[20];
+	char sobrenome[20];
+	char funcao[20];
+	char pais[20];
 	
 }Voluntarios;
 
 typedef struct{
 	int idNUm;
-	char nome[40];
-	char sobrenome[40];
-	char modalidades[40];
-	char pais[40];
+	char nome[20];
+	char sobrenome[20];
+	char modalidades[20];
+	char pais[20];
 	
 }EquipeOlimpica;
 
 typedef struct{
 	int idNUm;
-	char nome[40];
-	char local[40];
-	char modalidades[40];
+	char nome[20];
+	char local[20];
+	char modalidades[20];
 	
 }Alojamentos;
 
 typedef struct{
 	int idNUm;
-	char localJogo[40];
+	char localJogo[20];
 	
 }LocaisJogos;
 
 typedef struct{
 	int idNUms;
-	char equipamentos[50];
+	char equipamentos[40];
 }Equipamentos;
 
 
@@ -113,7 +111,7 @@ void cadastroAtletas(){
 	FILE *paises;
 	FILE *modalidade;
 	
-	int ver, confirma, i, quantAtlet, size, ultPais, j, contador=0, opcaoPais, ultMod, OpMod;
+	int ver, confirma, i, quantAtlet=1, size, ultPais, j, contador=0, opcaoPais, ultMod, OpMod;
 	Atleta atletas;
 	Paises paisess;
 	Paises paise[100];
@@ -129,7 +127,7 @@ void cadastroAtletas(){
 	
 		if(get_size(modal)==0)
 		{
-			printf("Nenhuma modalidade cadastrado!!\n");
+			printf("Nenhuma modalidade cadastrada!!\n");
 			sleep(2);
 			main();
 		}
@@ -197,16 +195,16 @@ void cadastroAtletas(){
    			fread(&atletas, sizeof(Atleta), 1, atletasSalvar);  
    			printf ("id = %d nome = %s %s\n", atletas.idNUm, atletas.nome, atletas.sobrenome); 
 		*/
-			printf("Prencha os campos abaixo para cadastro de atleta \n\n");
+		/*	printf("Prencha os campos abaixo para cadastro de atleta \n\n");
 			printf("Informe quantos atletas deseja cadastrar:\n");
-			scanf("%d", &quantAtlet);
+			scanf("%d", &quantAtlet);*/
 			
 			Atleta atleta[quantAtlet];
 			
 			
 			
-			if(quantAtlet > 0)
-			{
+			//if(quantAtlet > 0)
+			//{
 				
 				if(get_size(nomeArqu) == 0)
 				{
@@ -258,7 +256,10 @@ void cadastroAtletas(){
 					else{
 						printf("Opção inválida!!\n");
 						sleep(2);
-						main();
+						//main();
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
 					}
 					
 					printf("\n");	
@@ -281,7 +282,10 @@ void cadastroAtletas(){
 					else{
 						printf("Opção inválida!!\n");
 						sleep(2);
-						main();
+						//main();
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
 					}
 						
 					system("cls");
@@ -319,13 +323,10 @@ void cadastroAtletas(){
 			     						 
 			     						 system("cls");
 			     						 printf("Dados salvos com sucesso!\n\n");
-			     						 
-			     						 	if(i+1 == quantAtlet)
-												{
-													sleep(2);
-													fclose(atletasSalvar);
-													main();	
-												}		
+										 sleep(2);
+										 fclose(atletasSalvar);
+										 main();	
+														
 									}
 									else
 									{
@@ -340,8 +341,8 @@ void cadastroAtletas(){
 									{
 										 system("cls");
 										 printf("Os dados não foram salvos!\n");
-										 //printf("Insira os dados novamente.\n\n");
-										 i = quantAtlet;
+										 printf("Insira os dados novamente.\n\n");
+										 i--;
 									}
 						
 						
@@ -376,14 +377,10 @@ void cadastroAtletas(){
 			     						 
 			     						 system("cls");
 			     						 printf("Dados salvos com sucesso!\n\n");
-			     						 
-			     						 
-			     						 if(i+1 == quantAtlet)
-											{
-												sleep(2);
-												fclose(atletasSalvar);
-												main();	
-											}	
+										 sleep(2);
+										 fclose(atletasSalvar);
+										main();	
+												
 									    
 			     						 
 									}
@@ -400,14 +397,14 @@ void cadastroAtletas(){
 									{
 										 system("cls");
 										 printf("Os dados não foram salvos!\n");
-										// printf("Insira os dados novamente.\n\n");
-										 i = quantAtlet;
+										 printf("Insira os dados novamente.\n\n");
+										 i--;
 									}
 	     					
 						}
 							
 							
-							if(i+1 == quantAtlet)
+							if(i == quantAtlet)
 							{
 								fclose(atletasSalvar);	
 								main();
@@ -415,8 +412,8 @@ void cadastroAtletas(){
 					
 				}
 						
-			}
-			else
+		//	}
+			/*else
 			{
 				
 				 system("cls");
@@ -424,7 +421,7 @@ void cadastroAtletas(){
 				 sleep(2);
 				 main();
 									
-			}
+			}*/
 		}
 	
 	
@@ -454,7 +451,7 @@ void paises(){
 	system("cls");
 	
 	FILE *paises;
-	int i, quant, confirma, ver, ultimoid=0, contador=0, j=0;
+	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0;
 	char caminho[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nomes[40][15];
 	char nome[40];
@@ -463,15 +460,15 @@ void paises(){
 	
 	
 	
-	printf("Informe quantos países deseja cadastrar:\n");
-	scanf("%d", &quant);
+	//printf("Informe quantos países deseja cadastrar:\n");
+	//scanf("%d", &quant);
 	
 	Paises pais[quant];
 	Paises paise;
 	Paises Paisescadastrados[100];
-	
-	if(quant > 0 && paises != NULL){
 		
+	if(paises != NULL)
+	{
 		if(get_size(caminho) == 0)
 		{
   		  ultimoid = 0;
@@ -532,8 +529,14 @@ void paises(){
 				scanf("%d", &ver);
 				
 				if(ver == 1){
-					printf("Id: %d \n", pais[i].idNUm);
-					printf("Pais: %s \n\n", pais[i].nomes);
+					int j;
+					
+					while(j < quant){
+						printf("Id: %d \n", pais[j].idNUm);
+						printf("Pais: %s \n\n", pais[j].nomes);
+						j++;
+					}
+					
 					
 					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
 					scanf("%d", &confirma);
@@ -553,6 +556,7 @@ void paises(){
 						system("cls");
 						printf("Entre novamente com os dados.\n");
 						i--;
+						
 					}
 					
 				}
@@ -571,16 +575,22 @@ void paises(){
 						fclose(paises);
 						sleep(2);
 						main();
+						}
 					}
 				}
-			}
-		}
-	}
+			}		
+		}		
+/*	}
+	else{
+		printf("Quantidade deve ser maior que zero.\n");
+		sleep(2);
+		main();
+	}*/
 }
 
 void modalidades(){
 	FILE *modalidade;
-	int i, quant, confirma, ver, ultimoid=0, contador=0, j=0;
+	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0;
 	char caminho[40] = "C:/Gestao Olimpiada/modalidades.txt";
 	char modal[40][15];
 	char modali[40];
@@ -589,14 +599,14 @@ void modalidades(){
 	
 	
 	
-	printf("Informe quantas modalidades deseja cadastrar:\n");
-	scanf("%d", &quant);
+	/*printf("Informe quantas modalidades deseja cadastrar:\n");
+	scanf("%d", &quant);*/
 	
 	Modalidades modalidades[quant];
 	Modalidades mod;
 	Modalidades mods[100];
 	
-	if(quant > 0 && modalidade != NULL)
+	if(modalidade != NULL)
 	{
 		
 		if(get_size(caminho) == 0)
@@ -685,6 +695,7 @@ void modalidades(){
 						system("cls");
 						printf("Entre novamente com os dados.\n");
 						i--;
+						
 					}
 					
 				}
@@ -867,7 +878,7 @@ void menuprincipal()
 						printf(" Escolha uma das opcoes: \n");
 						scanf("%d", &cadastro);
 						
-						if(cadastro > 0 && cadastro < 8)
+						if(cadastro > 0 && cadastro < 8 )
 							cadastros(cadastro);	
 						else if(cadastro == 8)
 						{
