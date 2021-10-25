@@ -1,0 +1,137 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define L 500
+
+void cadastros_locais()
+{
+    char nome[L];
+    char modalidades[L];
+    char equipamento[L];
+    long int capacidade;
+    int op;
+    printf(" Escolha uma das opcao: \n");
+    printf(" [1] Arenas \n [2] Centros de treinamento\n [3] Alojamento\n");
+    scanf("%d",&op);
+    system("cls");
+switch(op)
+    {
+    case 1:
+          printf("Digite o nome da arena: \n");
+          scanf("%s",&nome,L);
+          printf("Digite a modalidade: \n");
+          scanf("%s",&modalidades,L);
+          printf("Quais os equipamentos necessarios? \n");
+          scanf("%s",&equipamento,L);
+          printf("Digite a capacidade da arena: \n");
+          scanf("%d",&capacidade);
+          break;
+    case 2:
+        printf("Digite o nome do centro de treinamento: \n");
+       scanf("%s",&nome,L);
+        printf("Digite a modalidade: \n");
+        scanf("%s",&modalidades,L);
+        printf("Quais os equipamentos necessarios? \n");
+        scanf("%s",&equipamento,L);
+        break;
+    case 3:
+        printf(" Digite o nome do Alojamento: \n");
+        scanf("%s",&nome,L);
+        printf(" Digite a capacidade: \n");
+        scanf("%d",&capacidade);
+        break;
+   default:
+        printf(" Opcao invalida");
+        break;
+    }
+}
+void cadastro(int cadastros)
+{
+
+    switch(cadastros)
+    {
+    case 1:
+        system("cls");
+       
+        break;
+
+    case 2:
+        system("cls");
+        cadastros_locais();
+        break;
+
+    case 3:
+        system("cls");
+       
+        break;
+
+    case 4:
+        system("cls");
+        
+        
+        break;
+
+    default:
+        printf(" Opcao invalida");
+        break;
+    }
+
+}
+void calendario()
+{
+    printf("Calendario Olimpico \n");
+}
+
+
+void premiacao()
+{
+    printf(" Premiacao \n ");
+}
+
+int main()
+{
+
+    int opcao, cadastros;
+
+    printf("Menu principal \n \n");
+    printf("Menu principal \n \n");
+    printf(" [1] Cadastrar \n [2] Calendario Olimpico \n [3] Premiacao \n [4] Relatorios \n \n");
+    scanf("%d", &opcao);
+
+    printf("Escolha uma das opcoes \n");
+
+
+    switch(opcao)
+    {
+    case 1:
+        system("cls");
+        printf("\n");
+        printf(" [1] Cadastro de Pessoas \n [2] Cadastro de Locais \n [3] Cadastro de Evento \n [4] Voltar \n \n ");
+        printf("Escolha uma das opcoes: \n");
+        scanf("%d", &cadastros);
+
+        cadastro(cadastros);
+
+        break;
+
+    case 2:
+        system("cls");
+        calendario();
+
+        break;
+    case 3:
+        system("cls");
+        premiacao();
+        break;
+
+    case 4:
+        system("cls");
+        printf(" [1] Ranking dos países \n [2] Ranking dos países \n [3] Resumo por atleta \n [4] Total de medalhas por categoria \n ");
+        break;
+
+    default:
+        printf(" Digite uma opcao valida!! \n ");
+        break;
+    }
+    return 0;
+}
