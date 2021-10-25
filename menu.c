@@ -37,16 +37,16 @@ typedef struct{
 
 typedef struct{
 	int idNUm;
-	char nomes[20];
-	char sobrenomes[20];
+	char nome[20];
+	char sobrenome[20];
 	char funcao[20];
-	char pais[20];
 }Funcionarios;
 
 typedef struct{
 	int idNUm;
-	char nomes[20];
-	char sobrenomes[20];
+	char nome[20];
+	char sobrenome[20];
+	char especialidade[20];
 	char pais[20];
 }Medicos;
 
@@ -83,7 +83,7 @@ typedef struct{
 }LocaisJogos;
 
 typedef struct{
-	int idNUms;
+	int idNUm;
 	char equipamentos[40];
 }Equipamentos;
 
@@ -168,7 +168,7 @@ void cadastroAtletas(){
 			paises = fopen(pais, "r");
 			fseek(paises, -1*sizeof(Paises),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
   			fread(&paisess, sizeof(Paises), 1, paises); //ler o ultimo registro
-  				ultPais = paisess.idNUm;
+  			ultPais = paisess.idNUm;
   				
   				//printf ("id = %d ", ultPais); 
   				
@@ -264,6 +264,8 @@ void cadastroAtletas(){
 					
 					printf("\n");	
 					printf("País:\n\n");
+					
+					j=0;
 					
 					while(j<ultPais){
 						printf("[%d] %s\n", j+1, paise[j].nomes);
@@ -429,16 +431,484 @@ void cadastroAtletas(){
 
 
 void cadastroFuncionarios(){
+	system("cls");
+	
+	FILE *funcionarios;
+	int i, quant=1, confirma, ver, ultimoid, contador=0, j;
+	char caminho[40] = "C:/Gestao Olimpiada/funcionarios.txt";
+	
+	funcionarios = fopen(caminho, "a+");
+	
+	Funcionarios funcionario[quant];
+	Funcionarios funcio;
+		
+	if(funcionarios != NULL)
+	{
+		
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(funcionarios, -1*sizeof(Funcionarios),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&funcio, sizeof(Funcionarios), 1, funcionarios); //ler o ultimo registro
+  			ultimoid = funcio.idNUm;
+  			
+  			//printf("Id = %d \n", ultimoid);
+  			
+		}	
+		
+		
+		for(i=0;i<quant;i++)
+		{
+					
+			funcionario[i].idNUm = ultimoid+1;
+			
+			printf("insira o nome:\n");
+			scanf("%s", &funcionario[i].nome);
+			
+			printf("insira o sobrenome:\n");
+			scanf("%s", &funcionario[i].sobrenome);
+			
+			printf("insira a funcao:\n");
+			scanf("%s", &funcionario[i].funcao);
+			
+			printf("\n");
+			
+			if(i+1 == quant){
+				printf("Deseja visualizar os dados informados ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1){
+					j = 0;
+					
+					while(j < quant){
+						printf("Id: %d \n", funcionario[j].idNUm);
+						printf("Nome: %s \n", funcionario[j].nome);
+						printf("Sobrenome: %s \n", funcionario[j].sobrenome);
+						printf("Função: %s\n", funcionario[j].funcao);
+						j++;
+					}
+					
+					printf("\n");
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(funcionarios, 0, SEEK_END);
+						fwrite(&funcionario, sizeof(Funcionarios), 1, funcionarios);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(funcionarios);
+						sleep(2);	
+						main();
+							
+						
+					}
+					else{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else{
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(funcionarios, 0, SEEK_END);
+						fwrite(&funcionario, sizeof(Funcionarios), 1, funcionarios);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(funcionarios);
+						sleep(2);	
+						main();	
+					}
+					else{
+						printf("Os dados não foram salvos!!\n");
+						fclose(funcionarios);
+						sleep(2);
+						main();
+						}
+					}
+				}
+				
+				
+			}	
+		}	
+	
+	
+	
+	
 }
 
 
 void cadastroMedicos(){
+	system("cls");
 	
+	FILE *medicos;
+	FILE *paises;
+	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j=0, opcaoPais, ultPais;
+	char caminho[40] = "C:/Gestao Olimpiada/medicos.txt";
+	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
+	char nomes[40][15];
+	char nome[40];
+	Paises paisess;
+	Paises paise[100];
+	
+	medicos = fopen(caminho, "a+");
+	
+	Medicos medico[quant];
+	Medicos med;
+	
+		if(get_size(pais)==0)
+		{
+			printf("Nenhum pais cadastrado!!\n");
+			sleep(2);
+			main();
+		}
+		else
+		{
+			
+			paises = fopen(pais, "r");
+			fseek(paises, -1*sizeof(Paises),SEEK_END);
+  			fread(&paisess, sizeof(Paises), 1, paises); 
+  			ultPais = paisess.idNUm;
+  				
+  				
+			rewind(paises);
+		
+			while(!feof(paises))
+				{
+					fread(&paisess, sizeof(Paises),1,paises);
+					paise[contador] = paisess;
+					contador++;
+				}
+				
+				fclose(paises);
+		}
+	
+		
+	if(medicos != NULL)
+	{
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(medicos, -1*sizeof(Medicos),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&med, sizeof(Medicos), 1, medicos); //ler o ultimo registro
+  			ultimoid = med.idNUm;
+		}
+		
+		for(i=0;i<quant;i++)
+		{
+			
+			int vol = 0, compara=0;
+			
+			medico[i].idNUm = ultimoid+1;
+			
+			printf("insira o nome:\n");
+			scanf("%s", &medico[i].nome);
+			
+			printf("insira o sobrenome:\n");
+			scanf("%s", &medico[i].sobrenome);
+			
+			printf("insira a funcao:\n");
+			scanf("%s", &medico[i].especialidade);
+				
+			
+			printf("\n");	
+			printf("País:\n\n");
+			
+			j=0;
+			
+			while(j<ultPais){
+				printf("[%d] %s\n", j+1, paise[j].nomes);
+				j++;
+				
+			}
+			
+			printf("\n");
+			printf("Escolha um país:\n");	
+			scanf("%d", &opcaoPais);
+			
+			if(opcaoPais > 0 && opcaoPais <= ultPais)
+			{
+				strcpy(medico[i].pais , paise[opcaoPais].nomes);
+			}
+			else
+			{
+				printf("Opção inválida!!\n");
+				sleep(2);
+				system("cls");
+				printf("Entre novamente com os dados.\n");
+				i--;
+			}
+			
+			
+			if(i+1 == quant)
+			{
+				printf("Deseja visualizar os dados informados ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1)
+				{
+					int j = 0;
+					
+					while(j < quant)
+					{
+						printf("Id: %d \n", medico[j].idNUm);
+						printf("Nome: %s \n", medico[j].nome);
+						printf("Sobrenome: %s \n", medico[j].sobrenome);
+						printf("Função: %s\n", medico[j].especialidade);
+						printf("Pais: %s \n\n", medico[j].pais);
+						j++;
+					}
+					
+					
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(medicos, 0, SEEK_END);
+						fwrite(&medico, sizeof(Medicos), 1, medicos);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(medicos);
+						sleep(2);
+						main();
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else
+				{
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(medicos, 0, SEEK_END);
+						fwrite(&medico, sizeof(Medicos), 1, medicos);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(medicos);
+						sleep(2);
+						main();
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						fclose(medicos);
+						sleep(2);
+						main();
+					}	
+				 }
+			}		
+		}	
+	}		
 	
 }
 
 
 void cadastroVoluntarios(){
+	system("cls");
+	
+	FILE *voluntarios;
+	FILE *paises;
+	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0, opcaoPais, ultPais;
+	char caminho[40] = "C:/Gestao Olimpiada/voluntarios.txt";
+	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
+	char nomes[40][15];
+	char nome[40];
+	Paises paisess;
+	Paises paise[100];
+	
+	voluntarios = fopen(caminho, "a+");
+	
+	Voluntarios voluntario[quant];
+	Voluntarios volum;
+	
+		if(get_size(pais)==0)
+		{
+			printf("Nenhum pais cadastrado!!\n");
+			sleep(2);
+			main();
+		}
+		else
+		{
+			
+			paises = fopen(pais, "r");
+			fseek(paises, -1*sizeof(Paises),SEEK_END);
+  			fread(&paisess, sizeof(Paises), 1, paises); 
+  			ultPais = paisess.idNUm;
+  				
+  				
+			rewind(paises);
+		
+			while(!feof(paises))
+				{
+					fread(&paisess, sizeof(Paises),1,paises);
+					paise[contador] = paisess;
+					contador++;
+				}
+				
+				fclose(paises);
+		}
+	
+		
+	if(voluntarios != NULL)
+	{
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(voluntarios, -1*sizeof(Voluntarios),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&volum, sizeof(Voluntarios), 1, voluntarios); //ler o ultimo registro
+  			ultimoid = volum.idNUm;
+		}
+		
+		for(i=0;i<quant;i++)
+		{
+			
+			int vol = 0, compara=0;
+			
+			voluntario[i].idNUm = ultimoid+1;
+			
+			printf("insira o nome:\n");
+			scanf("%s", &voluntario[i].nome);
+			
+			printf("insira o sobrenome:\n");
+			scanf("%s", &voluntario[i].sobrenome);
+			
+			printf("insira a funcao:\n");
+			scanf("%s", &voluntario[i].funcao);
+				
+			
+			printf("\n");	
+			printf("País:\n\n");
+			
+			j=0;
+			
+			while(j<ultPais){
+				printf("[%d] %s\n", j+1, paise[j].nomes);
+				j++;
+				
+			}
+			
+			printf("\n");
+			printf("Escolha um país:\n");	
+			scanf("%d", &opcaoPais);
+			
+			if(opcaoPais > 0 && opcaoPais <= ultPais)
+			{
+				strcpy(voluntario[i].pais , paise[opcaoPais].nomes);
+			}
+			else
+			{
+				printf("Opção inválida!!\n");
+				sleep(2);
+				//main();
+				system("cls");
+				printf("Entre novamente com os dados.\n");
+				i--;
+			}
+			
+			
+			if(i+1 == quant)
+			{
+				printf("Deseja visualizar os dados informados ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1)
+				{
+					int j = 0;
+					
+					while(j < quant)
+					{
+						printf("Id: %d \n", voluntario[j].idNUm);
+						printf("Nome: %s \n", voluntario[j].nome);
+						printf("Sobrenome: %s \n", voluntario[j].sobrenome);
+						printf("Função: %s\n", voluntario[j].funcao);
+						printf("Pais: %s \n\n", voluntario[j].pais);
+						j++;
+					}
+					
+					
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(voluntarios, 0, SEEK_END);
+						fwrite(&voluntario, sizeof(Voluntarios), 1, voluntarios);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(voluntarios);
+						sleep(2);
+						main();
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else
+				{
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(voluntarios, 0, SEEK_END);
+						fwrite(&voluntario, sizeof(Voluntarios), 1, voluntarios);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(voluntarios);
+						sleep(2);
+						main();
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						fclose(voluntarios);
+						sleep(2);
+						main();
+					}	
+				 }
+			}		
+		}	
+	}		
 }
 
 
@@ -495,7 +965,7 @@ void paises(){
 				j++;
 			}
 				
-				printf ("id = %d ", ultimoid); 
+			//	printf ("id = %d ", ultimoid); 
 		}
 		
 		for(i=0;i<quant;i++)
@@ -529,7 +999,7 @@ void paises(){
 				scanf("%d", &ver);
 				
 				if(ver == 1){
-					int j;
+					int j = 0;
 					
 					while(j < quant){
 						printf("Id: %d \n", pais[j].idNUm);
@@ -674,8 +1144,16 @@ void modalidades(){
 				scanf("%d", &ver);
 				
 				if(ver == 1){
-					printf("Id: %d \n", modalidades[i].idNUm);
-					printf("Modalidade: %s \n\n", modalidades[i].modalidades);
+					
+					j = 0;
+					
+					while(j < quant){
+						printf("Id: %d \n", modalidades[j].idNUm);
+						printf("Modalidade: %s \n\n", modalidades[j].modalidades);
+						j++;
+					}
+					
+				
 					
 					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
 					scanf("%d", &confirma);
@@ -909,12 +1387,14 @@ void menuprincipal()
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   RELATORIOS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Ranking dos países \n [2] Resumo por atleta \n [3] Total de medalhas por categoria \n\n");
+						printf(" [1] Ranking dos países \n [2] Resumo por atleta \n [3] Total de medalhas por categoria \n [4] Voltar\n\n");
 						printf("Escolha uma opção:\n");
 						scanf("%d", &relatorios);
 						
 						if(relatorios > 0 && relatorios < 4)
 							menuRelatorios(relatorios);
+						else if(relatorios == 4)
+							main();
 						else
 						{
 							printf("Opção inválida.\n");
