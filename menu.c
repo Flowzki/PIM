@@ -6,6 +6,7 @@
 #include<direct.h>
 #include<stdlib.h>
 
+
 typedef struct{
 	int idNUm;
 	char nomes[20];
@@ -123,6 +124,8 @@ void cadastroAtletas(){
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
 	char modal[40] = "C:/Gestao Olimpiada/modalidades.txt";
 	
+	
+	
 	atletasSalvar = fopen(nomeArqu,"a+");
 	
 		if(get_size(modal)==0)
@@ -201,7 +204,7 @@ void cadastroAtletas(){
 			
 			Atleta atleta[quantAtlet];
 			
-			
+		    memset(atleta, 0, (size_t)quantAtlet * sizeof(atleta));
 			
 			//if(quantAtlet > 0)
 			//{
@@ -256,10 +259,10 @@ void cadastroAtletas(){
 					else{
 						printf("Opção inválida!!\n");
 						sleep(2);
-						//main();
-						system("cls");
+						main();
+						/*system("cls");
 						printf("Entre novamente com os dados.\n");
-						i--;
+						i--;*/
 					}
 					
 					printf("\n");	
@@ -284,10 +287,10 @@ void cadastroAtletas(){
 					else{
 						printf("Opção inválida!!\n");
 						sleep(2);
-						//main();
+						main();
 						system("cls");
-						printf("Entre novamente com os dados.\n");
-						i--;
+						/*printf("Entre novamente com os dados.\n");
+						i--;*/
 					}
 						
 					system("cls");
@@ -441,7 +444,10 @@ void cadastroFuncionarios(){
 	
 	Funcionarios funcionario[quant];
 	Funcionarios funcio;
-		
+	
+	 memset(funcionario, 0, (size_t)quant * sizeof(funcionario));
+	
+	
 	if(funcionarios != NULL)
 	{
 		
@@ -560,13 +566,15 @@ void cadastroMedicos(){
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nomes[40][15];
 	char nome[40];
-	Paises paisess;
-	Paises paise[100];
+	Paises paisess = { 0 };
+	Paises paise[100] = { 0 };
 	
 	medicos = fopen(caminho, "a+");
 	
 	Medicos medico[quant];
 	Medicos med;
+	
+	 memset(medico, 0, (size_t)quant * sizeof(medico));
 	
 		if(get_size(pais)==0)
 		{
@@ -622,7 +630,7 @@ void cadastroMedicos(){
 			printf("insira o sobrenome:\n");
 			scanf("%s", &medico[i].sobrenome);
 			
-			printf("insira a funcao:\n");
+			printf("insira a especialidade:\n");
 			scanf("%s", &medico[i].especialidade);
 				
 			
@@ -669,7 +677,7 @@ void cadastroMedicos(){
 						printf("Id: %d \n", medico[j].idNUm);
 						printf("Nome: %s \n", medico[j].nome);
 						printf("Sobrenome: %s \n", medico[j].sobrenome);
-						printf("Função: %s\n", medico[j].especialidade);
+						printf("Especialidade: %s\n", medico[j].especialidade);
 						printf("Pais: %s \n\n", medico[j].pais);
 						j++;
 					}
@@ -741,13 +749,16 @@ void cadastroVoluntarios(){
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nomes[40][15];
 	char nome[40];
-	Paises paisess;
-	Paises paise[100];
+	Paises paisess = { 0 };
+	Paises paise[100] = { 0 };
 	
 	voluntarios = fopen(caminho, "a+");
 	
 	Voluntarios voluntario[quant];
 	Voluntarios volum;
+	
+	 memset(voluntario, 0, (size_t)quant * sizeof(voluntario));
+	
 	
 		if(get_size(pais)==0)
 		{
@@ -936,6 +947,8 @@ void paises(){
 	Paises pais[quant];
 	Paises paise;
 	Paises Paisescadastrados[100];
+	
+	 memset(pais, 0, (size_t)quant * sizeof(pais));
 		
 	if(paises != NULL)
 	{
@@ -1075,6 +1088,10 @@ void modalidades(){
 	Modalidades modalidades[quant];
 	Modalidades mod;
 	Modalidades mods[100];
+	
+	 memset(modalidades, 0, (size_t)quant * sizeof(modalidades));
+	 memset(mods, 0, (size_t)100 * sizeof(modalidades));
+	
 	
 	if(modalidade != NULL)
 	{
@@ -1421,6 +1438,8 @@ void menuprincipal()
 }
 
 int main(char usuario[], char senha[] ){
+	
+	//ICON "/logo.ico";
 	
 	setlocale(LC_ALL, "portuguese");
 	system("cls");
