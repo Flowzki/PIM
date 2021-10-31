@@ -1302,8 +1302,8 @@ void alojamentos(){
 	
 	FILE *alojamentos;
 	FILE *paises;
-	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j=0, opcaoPais, ultPais, ids, continuar, quantAloj;
-	char caminho[40] = "C:/Gestao Olimpiada/alojamentos.txt";
+	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j=0, opcaoPais, ultPais, quantPais;
+	char caminho[] = "C:/Gestao Olimpiada/alojamentos.txt";
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nome[40];
 	char nomes[50][15];
@@ -1315,7 +1315,9 @@ void alojamentos(){
 	
 	Alojamentos aloj;
 	Alojamentos alojamento[quant];
-	Alojamentos alojCadastrados[100];
+	Alojamentos alojCadastrado[100];
+	
+
 	memset(alojamento, 0, (size_t)quant * sizeof(alojamento));
 	
 	
@@ -1365,13 +1367,13 @@ void alojamentos(){
 	 		while(!feof(alojamentos))
 		  	{
 				fread(&aloj, sizeof(Alojamentos), 1, alojamentos);
-				alojCadastrados[contador] = aloj;
+				alojCadastrado[contador] = aloj;
 				contador++;			
 			}
 		
 			while(j<=ultimoid)
 			{
-				strcpy(nomes[j], alojCadastrados[j].nome);
+				strcpy(nomes[j], alojCadastrado[j].nome);
 				j++;
 			}
 			
@@ -1427,14 +1429,26 @@ void alojamentos(){
 				
 			}
 			printf("\n");
-			printf("Informe quantos países vão utilizar esse local.\n");
-			scanf("%d", &quantAloj);
+			printf("Informe quantos países vão utilizar esse local ou zero [0] para todos.\n");
+			scanf("%d", &quantPais);
 			
-			if(quantAloj > 0 && quantAloj <= ultPais)
+			if(quantPais == 0 )
 			{
 				j = 0;
 				
-				for(j=0;j<quantAloj;j++)
+					while(j<ultPais)
+						{
+							strcpy(alojamento[i].pais[j].nomes , paise[j].nomes);	
+							j++;
+						}
+						
+			}
+			
+			else if(quantPais > 0 && quantPais <= ultPais)
+			{
+				j = 0;
+				
+				for(j=0;j<quantPais;j++)
 				{
 					printf("\n");
 					printf("Escolha o país %d:\n", j+1);	
@@ -1474,13 +1488,31 @@ void alojamentos(){
 				{
 						printf("Id: %d \n", alojamento[i].idNUm);
 						printf("Nome: %s \n", alojamento[i].nome);
-						j=0;
+						printf("Local: %s \n", alojamento[i].local);
+					
 						
-						while(j<quantAloj)
+						if(quantPais == 0)
 						{
-							printf("Pais %d: %s \n", j+1, alojamento[i].pais[j].nomes);	
-							j++;
+								j = 0;
+				
+							while(j<ultPais)
+							{
+								printf("Pais %d: %s \n", j+1, alojamento[i].pais[j].nomes);	
+								j++;
+							}
+							
 						}
+						else
+						{
+								j=0;
+								
+								while(j<quantPais)
+								{
+									printf("Pais %d: %s \n", j+1, alojamento[i].pais[j].nomes);	
+									j++;
+								}
+						}
+						
 					
 					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
 					scanf("%d", &confirma);

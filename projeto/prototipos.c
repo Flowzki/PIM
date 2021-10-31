@@ -20,6 +20,8 @@ void locaisJogos();
 
 void centroTreinamento();
 
+void equipamentos();
+
 void cadastro(int opcao);
 
 void cadastros(int cadastros);

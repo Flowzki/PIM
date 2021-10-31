@@ -82,6 +82,15 @@ typedef struct{
 
 typedef struct{
 	int idNUm;
+	char nome[40];
+	char local[40];
+	Paises pais[100];
+	
+}CentroTreinamento;
+
+
+typedef struct{
+	int idNUm;
 	char equipamentos[40];
 	
 }Equipamentos;
