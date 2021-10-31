@@ -1413,16 +1413,20 @@ void alojamentos(){
 	
 	FILE *alojamentos;
 	FILE *paises;
-	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j, opcaoPais, ultPais, ids, continuar, quantAloj;
+	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j=0, opcaoPais, ultPais, ids, continuar, quantAloj;
 	char caminho[40] = "C:/Gestao Olimpiada/alojamentos.txt";
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
+	char nome[40];
+	char nomes[50][15];
 	Paises paisess;
 	Paises paise[100];
+	
 	
 	alojamentos = fopen(caminho, "a+");
 	
 	Alojamentos aloj;
 	Alojamentos alojamento[quant];
+	Alojamentos alojCadastrados[100];
 	memset(alojamento, 0, (size_t)quant * sizeof(alojamento));
 	
 	
@@ -1465,6 +1469,24 @@ void alojamentos(){
 			fseek(alojamentos, -1*sizeof(Alojamentos),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
   			fread(&aloj, sizeof(Alojamentos), 1, alojamentos); //ler o ultimo registro
   			ultimoid = aloj.idNUm;
+  			
+  			
+  			rewind(alojamentos);
+  	
+	 		while(!feof(alojamentos))
+		  	{
+				fread(&aloj, sizeof(Alojamentos), 1, alojamentos);
+				alojCadastrados[contador] = aloj;
+				contador++;			
+			}
+		
+			while(j<=ultimoid)
+			{
+				strcpy(nomes[j], alojCadastrados[j].nome);
+				j++;
+			}
+			
+  			
 		}
 			
 	
@@ -1474,12 +1496,32 @@ void alojamentos(){
 		{
 			
 			
-			int vol = 0, pa=0;
+			int compara = 0;
 			
 			alojamento[i].idNUm = ultimoid+1;
 			
 			printf("insira o nome:\n");
-			scanf("%s", &alojamento[i].nome);
+			scanf("%s", &nome);
+			
+			j=0;
+			
+			for(j=0;j<=ultimoid;j++)
+			{
+				compara = strcmp(nome, nomes[j]);
+				
+					if(compara == 0)
+					{
+						system("cls");
+						printf("Alojamento já cadastrado.\n");
+						sleep(2);
+						main();
+					}
+					else{
+						strcpy(alojamento[i].nome, nome);
+					}
+				
+			}
+			
 			
 			printf("Insira o local:\n");
 			scanf("%s", &alojamento[i].local);
@@ -1501,15 +1543,17 @@ void alojamentos(){
 			
 			if(quantAloj > 0 && quantAloj <= ultPais)
 			{
-				for(pa=0;pa<quantAloj;pa++)
+				j = 0;
+				
+				for(j=0;j<quantAloj;j++)
 				{
 					printf("\n");
-					printf("Escolha o país %d:\n", pa+1);	
+					printf("Escolha o país %d:\n", j+1);	
 					scanf("%d", &opcaoPais);
 					
 					if(opcaoPais > 0 && opcaoPais <= ultPais)
 					{
-						strcpy(alojamento[i].pais[pa].nomes , paise[opcaoPais-1].nomes);
+						strcpy(alojamento[i].pais[j].nomes , paise[opcaoPais-1].nomes);
 					}
 					else
 					{
