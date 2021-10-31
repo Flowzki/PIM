@@ -64,7 +64,8 @@ typedef struct{
 	int idNUm;
 	char nome[20];
 	char sobrenome[20];
-	char modalidades[20];
+	char funcao[20];
+	//char modalidades[20];
 	char pais[20];
 	
 }EquipeOlimpica;
@@ -254,7 +255,7 @@ void cadastroAtletas(){
 					
 					if(OpMod > 0 && OpMod <= ultMod)
 					{
-						strcpy(atleta[i].modalidade , modalidades[OpMod].modalidades);
+						strcpy(atleta[i].modalidade , modalidades[OpMod-1].modalidades);
 					}
 					else{
 						printf("Opção inválida!!\n");
@@ -282,7 +283,7 @@ void cadastroAtletas(){
 					
 					if(opcaoPais > 0 && opcaoPais <= ultPais)
 					{
-						strcpy(atleta[i].pais , paise[opcaoPais].nomes);
+						strcpy(atleta[i].pais , paise[opcaoPais-1].nomes);
 					}
 					else{
 						printf("Opção inválida!!\n");
@@ -566,8 +567,8 @@ void cadastroMedicos(){
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nomes[40][15];
 	char nome[40];
-	Paises paisess = { 0 };
-	Paises paise[100] = { 0 };
+	Paises paisess;
+	Paises paise[100];
 	
 	medicos = fopen(caminho, "a+");
 	
@@ -651,7 +652,7 @@ void cadastroMedicos(){
 			
 			if(opcaoPais > 0 && opcaoPais <= ultPais)
 			{
-				strcpy(medico[i].pais , paise[opcaoPais].nomes);
+				strcpy(medico[i].pais , paise[opcaoPais-1].nomes);
 			}
 			else
 			{
@@ -749,8 +750,8 @@ void cadastroVoluntarios(){
 	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nomes[40][15];
 	char nome[40];
-	Paises paisess = { 0 };
-	Paises paise[100] = { 0 };
+	Paises paisess;
+	Paises paise[100];
 	
 	voluntarios = fopen(caminho, "a+");
 	
@@ -835,7 +836,7 @@ void cadastroVoluntarios(){
 			
 			if(opcaoPais > 0 && opcaoPais <= ultPais)
 			{
-				strcpy(voluntario[i].pais , paise[opcaoPais].nomes);
+				strcpy(voluntario[i].pais , paise[opcaoPais-1].nomes);
 			}
 			else
 			{
@@ -924,6 +925,182 @@ void cadastroVoluntarios(){
 
 
 void cadastroEquip(){
+	system("cls");
+	
+	FILE *equipes;
+	FILE *paises;
+	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j, opcaoPais, ultPais, ids, continuar;
+	char caminho[40] = "C:/Gestao Olimpiada/equipes.txt";
+	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
+	Paises paisess;
+	Paises paise[100];
+	
+	equipes = fopen(caminho, "a+");
+	
+	EquipeOlimpica equip;
+	EquipeOlimpica equipe[quant];
+	memset(equipe, 0, (size_t)quant * sizeof(equipe));
+	
+	
+		if(get_size(pais)==0)
+		{
+			printf("Nenhum pais cadastrado!!\n");
+			sleep(2);
+			main();
+		}
+		else
+		{
+			
+			paises = fopen(pais, "r");
+			fseek(paises, -1*sizeof(Paises),SEEK_END);
+  			fread(&paisess, sizeof(Paises), 1, paises); 
+  			ultPais = paisess.idNUm;
+  				
+  				
+			rewind(paises);
+		
+			while(!feof(paises))
+				{
+					fread(&paisess, sizeof(Paises),1,paises);
+					paise[contador] = paisess;
+					contador++;
+				}
+				
+				fclose(paises);
+		}
+	
+		
+	if(equipes != NULL)
+	{
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(equipes, -1*sizeof(EquipeOlimpica),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&equip, sizeof(EquipeOlimpica), 1, equipes); //ler o ultimo registro
+  			ultimoid = equip.idNUm;
+		}
+			
+	
+		
+		
+		for(i=0;i<quant;i++)
+		{
+			
+			//system("cls");
+			
+			int vol = 0, compara=0;
+			
+			equipe[i].idNUm = ultimoid+1;
+			
+			printf("insira o nome:\n");
+			scanf("%s", &equipe[i].nome);
+			
+			printf("insira o sobrenome:\n");
+			scanf("%s", &equipe[i].sobrenome);
+			
+			printf("Insira a funcao:\n");
+			scanf("%s", &equipe[i].funcao);
+				
+			
+			printf("\n");	
+			printf("País:\n\n");
+			
+			j=0;
+			
+			while(ultPais>j){
+				printf("[%d] %s\n", j+1, paise[j].nomes);
+				j++;
+				
+			}
+			
+			printf("\n");
+			printf("Escolha um país:\n");	
+			scanf("%d", &opcaoPais);
+			
+			if(opcaoPais > 0 && opcaoPais <= ultPais)
+			{
+				strcpy(equipe[i].pais , paise[opcaoPais-1].nomes);
+			}
+			else
+			{
+				printf("Opção inválida!!\n");
+				sleep(2);
+				system("cls");
+				printf("Entre novamente com os dados.\n");
+				i--;
+			}
+			
+			if(i+1 == quant)
+			{
+				printf("Deseja visualizar os dados informados ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1)
+				{
+						printf("Id: %d \n", equipe[i].idNUm);
+						printf("Nome: %s \n", equipe[i].nome);
+						printf("Sobrenome: %s \n", equipe[i].sobrenome);
+						printf("Função: %s\n", equipe[i].funcao);
+						printf("Pais: %s \n\n", equipe[i].pais);
+					
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(equipes, 0, SEEK_END);
+						fwrite(&equipe, sizeof(EquipeOlimpica), 1, equipes);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n\n");
+						fclose(equipes);
+						sleep(2);
+						main();	
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else
+				{
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(equipes, 0, SEEK_END);
+						fwrite(&equipe, sizeof(EquipeOlimpica), 1, equipes);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n");
+						fclose(equipes);
+						sleep(2);
+						main();	
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						fclose(equipes);
+						sleep(2);
+						main();
+					}	
+				 }
+			}
+			
+					
+		}	
+	}		
+	
+	
 }
 
 
