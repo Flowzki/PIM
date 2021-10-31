@@ -22,6 +22,7 @@ typedef struct{
 	int medalhasOuro;
 	int medalhasPrata;
 	int meadlhasbronze;
+	
 }Modalidades;
 
 typedef struct{
@@ -41,6 +42,7 @@ typedef struct{
 	char nome[20];
 	char sobrenome[20];
 	char funcao[20];
+	
 }Funcionarios;
 
 typedef struct{
@@ -74,19 +76,22 @@ typedef struct{
 	int idNUm;
 	char nome[20];
 	char local[20];
-	char modalidades[20];
+   	Modalidades	modalidades[50];
+ 	Paises pais[100];
 	
 }Alojamentos;
 
 typedef struct{
 	int idNUm;
-	char localJogo[20];
+	char nome[20];
+	char local[20];
 	
 }LocaisJogos;
 
 typedef struct{
 	int idNUm;
 	char equipamentos[40];
+	
 }Equipamentos;
 
 
@@ -1171,18 +1176,21 @@ void paises(){
 			for(pai=0;pai<=ultimoid;pai++)
 			{
 				compara = strcmp(nome, nomes[pai]);
+				
+					if(compara == 0)
+					{
+						system("cls");
+						printf("País já cadastrado.\n");
+						sleep(2);
+						main();
+					}
+					else{
+						strcpy(pais[i].nomes, nome);
+					}
+				
 			}
 			
-			if(compara == 0)
-			{
-				system("cls");
-				printf("País já cadastrado.\n");
-				sleep(2);
-				main();
-			}
-			else{
-				strcpy(pais[i].nomes, nome);
-			}
+		
 			
 			if(i+1 == quant){
 				printf("Deseja visualizar o nome informado ?\nDigite 1 para SIM e 0 para NÂO:\n");
@@ -1228,7 +1236,10 @@ void paises(){
 					{
 						fseek(paises, 0, SEEK_END);
 						fwrite(&pais, sizeof(Paises), 1, paises);
+						printf("Dados salvos com sucesso!!\n");
 						fclose(paises);
+						sleep(2);
+						main();
 					}
 					else{
 						printf("Os dados não foram salvos!!\n");
@@ -1398,7 +1409,353 @@ void modalidades(){
 }
 
 void alojamentos(){
+	system("cls");
+	
+	FILE *alojamentos;
+	FILE *paises;
+	int i=0, quant=1, confirma, ver, ultimoid=0, contador=0, j, opcaoPais, ultPais, ids, continuar, quantAloj;
+	char caminho[40] = "C:/Gestao Olimpiada/alojamentos.txt";
+	char pais[40] = "C:/Gestao Olimpiada/paises.txt";
+	Paises paisess;
+	Paises paise[100];
+	
+	alojamentos = fopen(caminho, "a+");
+	
+	Alojamentos aloj;
+	Alojamentos alojamento[quant];
+	memset(alojamento, 0, (size_t)quant * sizeof(alojamento));
+	
+	
+		if(get_size(pais)==0)
+		{
+			printf("Nenhum pais cadastrado!!\n");
+			sleep(2);
+			main();
+		}
+		else
+		{
+			
+			paises = fopen(pais, "r");
+			fseek(paises, -1*sizeof(Paises),SEEK_END);
+  			fread(&paisess, sizeof(Paises), 1, paises); 
+  			ultPais = paisess.idNUm;
+  				
+  				
+			rewind(paises);
+		
+			while(!feof(paises))
+				{
+					fread(&paisess, sizeof(Paises),1,paises);
+					paise[contador] = paisess;
+					contador++;
+				}
+				
+				fclose(paises);
+		}
+	
+		
+	if(alojamentos != NULL)
+	{
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(alojamentos, -1*sizeof(Alojamentos),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&aloj, sizeof(Alojamentos), 1, alojamentos); //ler o ultimo registro
+  			ultimoid = aloj.idNUm;
+		}
+			
+	
+		
+		
+		for(i=0;i<quant;i++)
+		{
+			
+			
+			int vol = 0, pa=0;
+			
+			alojamento[i].idNUm = ultimoid+1;
+			
+			printf("insira o nome:\n");
+			scanf("%s", &alojamento[i].nome);
+			
+			printf("Insira o local:\n");
+			scanf("%s", &alojamento[i].local);
+				
+			
+			printf("\n");	
+			printf("Países:\n\n");
+			
+			j=0;
+			
+			while(ultPais>j){
+				printf("[%d] %s\n", j+1, paise[j].nomes);
+				j++;
+				
+			}
+			printf("\n");
+			printf("Informe quantos países vão utilizar esse local.\n");
+			scanf("%d", &quantAloj);
+			
+			if(quantAloj > 0 && quantAloj <= ultPais)
+			{
+				for(pa=0;pa<quantAloj;pa++)
+				{
+					printf("\n");
+					printf("Escolha o país %d:\n", pa+1);	
+					scanf("%d", &opcaoPais);
+					
+					if(opcaoPais > 0 && opcaoPais <= ultPais)
+					{
+						strcpy(alojamento[i].pais[pa].nomes , paise[opcaoPais-1].nomes);
+					}
+					else
+					{
+						printf("Opção inválida!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+					}
+				}
+			}
+			else
+			{
+				printf("Opção inválida!!\n");
+				sleep(2);
+				system("cls");
+				printf("Entre novamente com os dados.\n");
+				i--;
+			}
+			
+		
+			
+			if(i+1 == quant)
+			{
+				printf("Deseja visualizar os dados informados ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1)
+				{
+						printf("Id: %d \n", alojamento[i].idNUm);
+						printf("Nome: %s \n", alojamento[i].nome);
+						j=0;
+						
+						while(j<quantAloj)
+						{
+							printf("Pais %d: %s \n", j+1, alojamento[i].pais[j].nomes);	
+							j++;
+						}
+					
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(alojamentos, 0, SEEK_END);
+						fwrite(&alojamento, sizeof(Alojamentos), 1, alojamentos);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n\n");
+						fclose(alojamentos);
+						sleep(2);
+						main();	
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else
+				{
+					printf("Confirma as informações ?\nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(alojamentos, 0, SEEK_END);
+						fwrite(&alojamento, sizeof(Alojamentos), 1, alojamentos);
+						system("cls");
+						printf("Dados salvos com sucesso!!\n\n");
+						fclose(alojamentos);
+						sleep(2);
+						main();	
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						fclose(alojamentos);
+						sleep(2);
+						main();
+					}	
+				 }
+			}
+			
+					
+		}	
+	}		
+	
+	
+	
 }
+
+void locaisJogos(){
+	
+	system("cls");
+	
+	FILE *locaisjogos;
+	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0;
+	char caminho[40] = "C:/Gestao Olimpiada/locaisjogos.txt";
+	char nomes[50][15];
+	char nome[40];
+	
+	locaisjogos = fopen(caminho, "a+");
+	
+	
+	LocaisJogos locais[quant];
+	LocaisJogos local;
+	LocaisJogos locaiscadastrados[100];
+	
+	 memset(locais, 0, (size_t)quant * sizeof(locais));
+		
+	if(locaisjogos != NULL)
+	{
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(locaisjogos, -1*sizeof(LocaisJogos),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&local, sizeof(LocaisJogos), 1, locaisjogos); //ler o ultimo registro
+  			ultimoid = local.idNUm;
+  				
+  				
+  			rewind(locaisjogos);
+  	
+	 		while(!feof(locaisjogos))
+		  	{
+				fread(&local, sizeof(LocaisJogos), 1, locaisjogos);
+				locaiscadastrados[contador] = local;
+				contador++;			
+			}
+		
+			while(j<=ultimoid)
+			{
+				strcpy(nomes[j], locaiscadastrados[j].nome);
+				j++;
+			}
+			
+		
+		}
+		
+		for(i=0;i<quant;i++)
+		{
+			
+			int loc[ultimoid], compara=0;
+			
+			locais[i].idNUm = ultimoid+1;
+			
+			printf("insira o nome:\n");
+			scanf("%s", &nome);
+			
+			j=0;
+			
+			for(j=0;j<=ultimoid;j++)
+			{
+				compara = strcmp(nome, nomes[j]);
+				
+				if(compara == 0)
+				{
+					system("cls");
+					printf("Local já cadastrado.\n");
+					sleep(2);
+					main();
+				}
+				else{
+					strcpy(locais[i].nome, nome);
+				}
+				
+			}
+			
+			
+			
+		
+			
+			if(i+1 == quant){
+				printf("Deseja visualizar o nome informado ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1){
+					int j = 0;
+					
+					while(j < quant){
+						printf("Id: %d \n", locais[j].idNUm);
+						printf("Local de jogo: %s \n\n", locais[j].nome);
+						j++;
+					}
+					
+					
+					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(locaisjogos, 0, SEEK_END);
+						fwrite(&locais, sizeof(LocaisJogos), 1, locaisjogos);
+						printf("Dados salvos com sucesso!!\n");
+						fclose(locaisjogos);
+						sleep(2);
+						main();
+					}
+					else{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else{
+					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(locaisjogos, 0, SEEK_END);
+						fwrite(&locais, sizeof(LocaisJogos), 1, locaisjogos);
+						printf("Dados salvos com sucesso!!\n");
+						fclose(locaisjogos);
+						sleep(2);
+						main();
+					}
+					else{
+						printf("Os dados não foram salvos!!\n");
+						fclose(locaisjogos);
+						sleep(2);
+						main();
+						}
+					}
+				}
+			}		
+		}		
+	
+}
+
+void centroTreinamento(){
+	
+}
+
 
 
 void cadastro(int opcao){
@@ -1423,18 +1780,12 @@ void cadastro(int opcao){
 		default:
 			printf("Opção invalida!!\n");
 			sleep(2);
-			main();	
+			main();
 						
 	}
 		
 }
 
-void locaisJogos(){
-}
-
-void centroTreinamento(){
-	
-}
 
 void cadastros(int cadastros){
 	
@@ -1445,7 +1796,7 @@ void cadastros(int cadastros){
 				
 						system("cls");
 						printf("---------------------------------------------------------------------------------------------\n");
-						printf("                                   CADASTROS \n");
+						printf("                                   CADASTROS DE PESSOAS\n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("\n");
 						printf(" [1] Atletas \n [2] Funcionários \n [3] Médicos \n [4] Voluntários \n [5] Equipe Olímpica \n [6] Voltar \n \n ");
@@ -1483,12 +1834,12 @@ void cadastros(int cadastros){
 				
 			case 5:
 				system("cls");
-				modalidades();
+				locaisJogos();
 				break;	
 					
 			case 6:
 				system("cls");
-				locaisJogos();
+				
 				break;
 			
 			case 7:
