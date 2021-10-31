@@ -5,6 +5,7 @@
 #include<string.h>
 #include<direct.h>
 #include<stdlib.h>
+#include <ctype.h>
 
 
 typedef struct{
@@ -205,23 +206,13 @@ void cadastroAtletas(){
 		if(atletasSalvar != NULL)
 		{
 		
-		 	/*printf("Entre com id para modificar:");
-    	 	scanf("%d",&idBusca)
-			
-			fseek(atletasSalvar, (idBusca-1)*sizeof(Atleta),SEEK_CUR);
-   			fread(&atletas, sizeof(Atleta), 1, atletasSalvar);  
-   			printf ("id = %d nome = %s %s\n", atletas.idNUm, atletas.nome, atletas.sobrenome); 
-		*/
-		/*	printf("Prencha os campos abaixo para cadastro de atleta \n\n");
-			printf("Informe quantos atletas deseja cadastrar:\n");
-			scanf("%d", &quantAtlet);*/
+		 
 			
 			Atleta atleta[quantAtlet];
 			
 		    memset(atleta, 0, (size_t)quantAtlet * sizeof(atleta));
 			
-			//if(quantAtlet > 0)
-			//{
+			
 				
 				if(get_size(nomeArqu) == 0)
 				{
@@ -233,15 +224,17 @@ void cadastroAtletas(){
    				 	fread(&atletas, sizeof(Atleta), 1, atletasSalvar); //ler o ultimo registro
    					ultimoId = atletas.idNUm;
 				
-				 	//printf ("id = %d ", ultimoId); 
+				 	
 				}
 				
 			
+					printf("---------------------------------------------------------------------------------------------\n");
+					printf("                                   CADASTRO ATLETAS \n");
+					printf("---------------------------------------------------------------------------------------------\n\n");
 				
 				for(i=0;i<quantAtlet;i++)
 				{
-					/*printf("ID: \n");
-					scanf("%d", &atleta[i].idNUm);*/
+					
 					
 					atleta[i].idNUm = ultimoId+1;
 					
@@ -274,9 +267,14 @@ void cadastroAtletas(){
 						printf("Opção inválida!!\n");
 						sleep(2);
 						main();
-						/*system("cls");
+						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO ATLETAS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
-						i--;*/
+						i--;
+						
+						
 					}
 					
 					printf("\n");	
@@ -301,10 +299,12 @@ void cadastroAtletas(){
 					else{
 						printf("Opção inválida!!\n");
 						sleep(2);
-						main();
 						system("cls");
-						/*printf("Entre novamente com os dados.\n");
-						i--;*/
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO ATLETAS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
+						printf("Entre novamente com os dados.\n");
+						i--;
 					}
 						
 					system("cls");
@@ -331,15 +331,6 @@ void cadastroAtletas(){
 								    	fseek(atletasSalvar,0,SEEK_END);
 								    	fwrite(&atleta, sizeof(Atleta), 1, atletasSalvar);
 								    	
-								    	/* fprintf(atletasSalvar, "----------------Atleta------------------------\n");
-								    	 fprintf(atletasSalvar, "%d \n", atleta[i].idNUm);
-			     						 fprintf(atletasSalvar, "%s\n",atleta[i].nome);
-			     						 fprintf(atletasSalvar, "%s\n",atleta[i].sobrenome);
-			     						 fprintf(atletasSalvar, "%s\n",atleta[i].modalidade);
-			     						 fprintf(atletasSalvar, "%s\n",atleta[i].pais);
-			     						 fprintf(atletasSalvar, "----------------------------------------------\n");*/
-			     						 
-			     						 
 			     						 system("cls");
 			     						 printf("Dados salvos com sucesso!\n\n");
 										 sleep(2);
@@ -358,10 +349,14 @@ void cadastroAtletas(){
 								}
 								else
 									{
-										 system("cls");
-										 printf("Os dados não foram salvos!\n");
-										 printf("Insira os dados novamente.\n\n");
-										 i--;
+									
+										system("cls");
+										printf("---------------------------------------------------------------------------------------------\n");
+										printf("                                   CADASTRO ATLETAS \n");
+										printf("---------------------------------------------------------------------------------------------\n\n");
+										printf("Os dados não foram salvos!\n");
+										printf("Insira os dados novamente.\n\n");
+										i--;
 									}
 						
 						
@@ -381,16 +376,7 @@ void cadastroAtletas(){
 							
 							if(confirma == 1)
 								{   
-								    if(atletasSalvar != NULL)
-								    {
-								    	 /*fprintf(atletasSalvar, "----------------Atleta------------------------\n");
-								    	 fprintf(atletasSalvar, "%d \n", atleta[i].idNUm);
-			     						 fprintf(atletasSalvar, "%s \n",atleta[i].nome);
-			     						 fprintf(atletasSalvar, "%s\n",atleta[i].sobrenome);
-			     						 fprintf(atletasSalvar, "%s\n",atleta[i].modalidade);
-			     						 fprintf(atletasSalvar, "%s \n",atleta[i].pais);
-			     						 fprintf(atletasSalvar, "----------------------------------------------\n");*/
-			     						 
+								    
 			     						 fseek(atletasSalvar,0,SEEK_END);
 			     						 fwrite(&atleta, sizeof(Atleta), 1, atletasSalvar);
 			     						 
@@ -398,52 +384,23 @@ void cadastroAtletas(){
 			     						 printf("Dados salvos com sucesso!\n\n");
 										 sleep(2);
 										 fclose(atletasSalvar);
-										main();	
-												
-									    
-			     						 
-									}
-									else
-									{
-										 system("cls");
-										 printf("Não foi possível salvar os dados!\n");
-										 sleep(2);
-										 main();
-									}
+										 main();	
 									
 								}
 								else
 									{
-										 system("cls");
-										 printf("Os dados não foram salvos!\n");
-										 printf("Insira os dados novamente.\n\n");
-										 i--;
+										system("cls");
+										printf("---------------------------------------------------------------------------------------------\n");
+										printf("                                   CADASTRO ATLETAS \n");
+										printf("---------------------------------------------------------------------------------------------\n\n");
+										printf("Os dados não foram salvos!\n");
+										printf("Insira os dados novamente.\n\n");
+										i--;
 									}
 	     					
 						}
-							
-							
-							if(i == quantAtlet)
-							{
-								fclose(atletasSalvar);	
-								main();
-							}		
-					
 				}
-						
-		//	}
-			/*else
-			{
-				
-				 system("cls");
-				 printf("Insira uma quantidade maior que zero!\n");
-				 sleep(2);
-				 main();
-									
-			}*/
 		}
-	
-	
 }
 
 
@@ -479,9 +436,16 @@ void cadastroFuncionarios(){
   			
 		}	
 		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO FUNCIONARIOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
 		
 		for(i=0;i<quant;i++)
 		{
+			
+		
+	
 					
 			funcionario[i].idNUm = ultimoid+1;
 			
@@ -531,6 +495,9 @@ void cadastroFuncionarios(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO FUNCIONARIOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -631,8 +598,15 @@ void cadastroMedicos(){
   			ultimoid = med.idNUm;
 		}
 		
+		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO MEDICOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
 		for(i=0;i<quant;i++)
 		{
+			
+			
 			
 			int vol = 0, compara=0;
 			
@@ -672,6 +646,9 @@ void cadastroMedicos(){
 				printf("Opção inválida!!\n");
 				sleep(2);
 				system("cls");
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   CADASTRO MEDICOS \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
 				printf("Entre novamente com os dados.\n");
 				i--;
 			}
@@ -716,6 +693,10 @@ void cadastroMedicos(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO MEDICOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -815,8 +796,15 @@ void cadastroVoluntarios(){
   			ultimoid = volum.idNUm;
 		}
 		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO VOLUNTARIOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
 		for(i=0;i<quant;i++)
 		{
+			
+			
+			
 			
 			int vol = 0, compara=0;
 			
@@ -857,8 +845,14 @@ void cadastroVoluntarios(){
 				sleep(2);
 				//main();
 				system("cls");
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   CADASTRO VOLUNTARIOS \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
 				printf("Entre novamente com os dados.\n");
 				i--;
+				
+			
+				
 			}
 			
 			
@@ -901,8 +895,12 @@ void cadastroVoluntarios(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO VOLUNTARIOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
+					
 						
 					}
 					
@@ -996,13 +994,15 @@ void cadastroEquip(){
   			ultimoid = equip.idNUm;
 		}
 			
-	
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO EQUIPE OLIMPICA \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
 		
 		
 		for(i=0;i<quant;i++)
 		{
 			
-			//system("cls");
+			
 			
 			int vol = 0, compara=0;
 			
@@ -1042,6 +1042,9 @@ void cadastroEquip(){
 				printf("Opção inválida!!\n");
 				sleep(2);
 				system("cls");
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   CADASTRO EQUIPE OLIMPICA \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
 				printf("Entre novamente com os dados.\n");
 				i--;
 			}
@@ -1077,8 +1080,12 @@ void cadastroEquip(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   CADASTRO EQUIPE OLIMPICA \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
+						
 						
 					}
 					
@@ -1171,8 +1178,14 @@ void paises(){
 			//	printf ("id = %d ", ultimoid); 
 		}
 		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO PAISES \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
 		for(i=0;i<quant;i++)
 		{
+			
+		
 			
 			int pai = 0, compara=0;
 			
@@ -1230,6 +1243,9 @@ void paises(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO PAISES \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -1259,12 +1275,7 @@ void paises(){
 				}
 			}		
 		}		
-/*	}
-	else{
-		printf("Quantidade deve ser maior que zero.\n");
-		sleep(2);
-		main();
-	}*/
+
 }
 
 void modalidades(){
@@ -1325,8 +1336,14 @@ void modalidades(){
 		 	printf ("id = %d ", ultimoid); 
 		}
 		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO MODALIDADES \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
 		for(i=0;i<quant;i++)
 		{
+			
+		
 			
 			int modalid = 0, compara=0;
 			
@@ -1384,6 +1401,9 @@ void modalidades(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO MODALIDADES \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -1500,10 +1520,13 @@ void alojamentos(){
 		}
 			
 	
-		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO ALOJAMENTOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
 		
 		for(i=0;i<quant;i++)
 		{
+			
 			
 			
 			int compara = 0;
@@ -1582,6 +1605,9 @@ void alojamentos(){
 						printf("Opção inválida!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO ALOJAMENTOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 					}
@@ -1592,6 +1618,9 @@ void alojamentos(){
 				printf("Opção inválida!!\n");
 				sleep(2);
 				system("cls");
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   CADASTRO ALOJAMENTOS \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
 				printf("Entre novamente com os dados.\n");
 				i--;
 			}
@@ -1651,6 +1680,9 @@ void alojamentos(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO ALOJAMENTOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -1741,10 +1773,16 @@ void locaisJogos(){
 		
 		}
 		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO LOCAIS DE JOGOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
 		for(i=0;i<quant;i++)
 		{
 			
-			int loc[ultimoid], compara=0;
+		
+			
+			int compara=0;
 			
 			locais[i].idNUm = ultimoid+1;
 			
@@ -1804,6 +1842,9 @@ void locaisJogos(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO LOCAIS DE JOGOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -1837,6 +1878,153 @@ void locaisJogos(){
 }
 
 void equipamentos(){
+	system("cls");
+	
+	FILE *equipamentos;
+	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0;
+	char caminho[40] = "C:/Gestao Olimpiada/equipamentos.txt";
+	char nomes[40][15];
+	char nome[40];
+	
+	equipamentos = fopen(caminho, "a+");
+	
+	Equipamentos equipamento[quant];
+	Equipamentos equip;
+	Equipamentos equipCad[100];
+	
+	 memset(equipamento, 0, (size_t)quant * sizeof(equipamento));
+		
+	if(equipamentos != NULL)
+	{
+		if(get_size(caminho) == 0)
+		{
+  		  ultimoid = 0;
+		}
+		else		
+		{
+			fseek(equipamentos, -1*sizeof(Equipamentos),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&equip, sizeof(Equipamentos), 1, equipamentos); //ler o ultimo registro
+  			ultimoid = equip.idNUm;
+  				
+  				
+  			rewind(equipamentos);
+  	
+	 		while(!feof(equipamentos))
+		  	{
+				fread(&equip, sizeof(Equipamentos), 1, equipamentos);
+				equipCad[contador] = equip;
+				contador++;			
+			}
+		
+			while(j<=ultimoid)
+			{
+				strcpy(nomes[j], equipCad[j].equipamentos);
+				j++;
+			}
+				
+		}
+		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO DE EQUIPAMENTOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");	
+		
+		for(i=0;i<quant;i++)
+		{
+		
+		
+			
+			int compara=0;
+			
+			equipamento[i].idNUm = ultimoid+1;
+			
+			printf("Insira o nome do equipamento:\n");
+			scanf("%s", &nome);
+			
+			j=0;
+			
+			for(j=0;j<=ultimoid;j++)
+			{
+				compara = strcmp(nome, nomes[j]);
+				
+					if(compara == 0)
+					{
+						system("cls");
+						printf("Equipamento já cadastrado.\n");
+						sleep(2);
+						main();
+					}
+					else{
+						strcpy(equipamento[i].equipamentos, nome);
+					}
+				
+			}
+			
+		
+			
+			if(i+1 == quant){
+				printf("Deseja visualizar o nome informado ?\nDigite 1 para SIM e 0 para NÂO:\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1){
+					int j = 0;
+					
+					while(j < quant){
+						printf("Id: %d \n", equipamento[j].idNUm);
+						printf("Equipamento: %s \n\n", equipamento[j].equipamentos);
+						j++;
+					}
+					
+					
+					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(equipamentos, 0, SEEK_END);
+						fwrite(&equipamento, sizeof(Equipamentos), 1, equipamentos);
+						printf("Dados salvos com sucesso!!\n");
+						fclose(equipamentos);
+						sleep(2);
+						main();
+					}
+					else{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO DE EQUIPAMENTOS \n");
+						printf("---------------------------------------------------------------------------------------------\n\n");	
+						printf("Entre novamente com os dados.\n");
+						i--;
+						
+					}
+					
+				}
+				else{
+					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(equipamentos, 0, SEEK_END);
+						fwrite(&equipamento, sizeof(Equipamentos), 1, equipamentos);
+						printf("Dados salvos com sucesso!!\n");
+						fclose(equipamentos);
+						sleep(2);
+						main();
+					}
+					else{
+						printf("Os dados não foram salvos!!\n");
+						fclose(equipamentos);
+						sleep(2);
+						main();
+						}
+					}
+				}
+			}		
+		}		
+	
+	
 }
 
 void centroTreinamento(){
@@ -1921,11 +2109,14 @@ void centroTreinamento(){
   			
 		}
 			
-	
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   CADASTRO CENTRO DE TREINAMENTO\n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
 		
 		
 		for(i=0;i<quant;i++)
 		{
+			
 			
 			
 			int compara = 0;
@@ -1992,6 +2183,9 @@ void centroTreinamento(){
 						printf("Opção inválida!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO CENTRO DE TREINAMENTO\n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 					}
@@ -2002,6 +2196,9 @@ void centroTreinamento(){
 				printf("Opção inválida!!\n");
 				sleep(2);
 				system("cls");
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   CADASTRO CENTRO DE TREINAMENTO\n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
 				printf("Entre novamente com os dados.\n");
 				i--;
 			}
@@ -2043,6 +2240,9 @@ void centroTreinamento(){
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
+						printf("---------------------------------------------------------------------------------------------\n");
+						printf("                                   CADASTRO CENTRO DE TREINAMENTO\n");
+						printf("---------------------------------------------------------------------------------------------\n\n");
 						printf("Entre novamente com os dados.\n");
 						i--;
 						
@@ -2211,11 +2411,11 @@ void menuprincipal()
 	printf("---------------------------------------------------------------------------------------------\n");
 	printf("                                   MENU PRINCIPAL \n");
 	printf("---------------------------------------------------------------------------------------------\n\n");
-	printf(" [1] Cadastros \n [2] Calendario Olimpico \n [3] Premiacao \n [4] Relatorios \n \n");
+	printf(" [1] Cadastros \n [2] Calendario Olimpico \n [3] Premiacao \n [4] Relatorios \n [5] Sair \n \n");
 	printf(" Escolha uma das opcoes \n");
 	scanf("%d", &opcao);
 	
-	if(opcao > 0 && opcao < 5)
+	if(opcao > 0 && opcao < 5 )
 		{
 			
 				switch(opcao)
@@ -2225,7 +2425,7 @@ void menuprincipal()
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   CADASTROS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Cadastro de Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Voltar \n\n");
+						printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Voltar \n\n");
 						printf(" Escolha uma das opcoes: \n");
 						scanf("%d", &cadastro);
 						
@@ -2284,7 +2484,9 @@ void menuprincipal()
 							
 
 		}
-		else
+		else if (opcao == 5)
+			exit(3);
+		else	
 			{
 				printf("Opção inválida!");
 				sleep(2);
@@ -2295,7 +2497,7 @@ void menuprincipal()
 
 int main(char usuario[], char senha[] ){
 	
-	//ICON "/logo.ico";
+	//ICON "logo.ico";
 	
 	setlocale(LC_ALL, "portuguese");
 	system("cls");
@@ -2308,15 +2510,6 @@ int main(char usuario[], char senha[] ){
       
 	
    }
-  
-
-		/*fopen("C:/Gestao Olimpiada/atletas.txt","a");
-		fopen("C:/Gestao Olimpiada/funcionarios.txt","a");
-		fopen("C:/Gestao Olimpiada/medicos.txt","a");
-		fopen("C:/Gestao Olimpiada/calendario.txt","a");
-		fopen("C:/Gestao Olimpiada/premiacao.txt","a");
-		fopen("C:/Gestao Olimpiada/rankingMedalhas.txt","a");
-		fopen("C:/Gestao Olimpiada/equipeMedica.txt","a");*/
      
      	menuprincipal();
 	
