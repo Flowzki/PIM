@@ -121,6 +121,7 @@ typedef struct{
 	LocaisJogos locais;
 	Data dataInico;
 	Data dataTermino;
+	int quantpais;
 }Evento;
 
 
@@ -150,7 +151,7 @@ int ultimo_id(const char* cam_arq, char *nome)
     if(file == NULL)
         return 0;
         
-     	if(strcmp(nome, "atleta" ) == 0)
+     	if(strcmp(nome, "atleta" ) == 0 && get_size(cam_arq) > 0)
 		{
 			Atleta atleta;
 			
@@ -160,7 +161,7 @@ int ultimo_id(const char* cam_arq, char *nome)
   			fclose(file);
 			return id;
 		}
-		else if(strcmp(nome, "pais")==0)
+		else if(strcmp(nome, "pais")==0 && get_size(cam_arq) > 0)
 		{
 			Paises pais;
 			
@@ -172,7 +173,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "modalidade")==0)
+		else if(strcmp(nome, "modalidade")==0 && get_size(cam_arq) > 0)
 		{
 			Modalidades modalidade;
 			
@@ -184,7 +185,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "funcionario")==0)
+		else if(strcmp(nome, "funcionario")==0 && get_size(cam_arq) > 0)
 		{
 			Funcionarios funcio;
 			
@@ -196,7 +197,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "medico")==0)
+		else if(strcmp(nome, "medico")==0 && get_size(cam_arq) > 0)
 		{
 			Medicos med;
 			
@@ -208,7 +209,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "voluntario")==0)
+		else if(strcmp(nome, "voluntario")==0 && get_size(cam_arq) > 0)
 		{
 			Voluntarios vol;
 			
@@ -220,7 +221,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "equipe")==0)
+		else if(strcmp(nome, "equipe")==0 && get_size(cam_arq) > 0)
 		{
 			EquipeOlimpica equip;
 			
@@ -232,7 +233,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "alojamento")==0)
+		else if(strcmp(nome, "alojamento")==0 && get_size(cam_arq) > 0)
 		{
 			Alojamentos aloj;
 			
@@ -244,7 +245,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "localjogo")==0)
+		else if(strcmp(nome, "localjogo")==0 && get_size(cam_arq) > 0)
 		{
 			LocaisJogos local;
 			
@@ -256,7 +257,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "centro")==0)
+		else if(strcmp(nome, "centro")==0 && get_size(cam_arq) > 0)
 		{
 			CentroTreinamento centro;
 			
@@ -268,7 +269,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "equipamento")==0)
+		else if(strcmp(nome, "equipamento")==0 && get_size(cam_arq) > 0)
 		{
 			Equipamentos equipa;
 			
@@ -280,7 +281,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
-		else if(strcmp(nome, "evento")==0)
+		else if(strcmp(nome, "evento")==0 && get_size(cam_arq) > 0)
 		{
 			Evento evento;
 			
@@ -292,9 +293,12 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
+		else
+		{	
+			return id;
+		} 
 		   
 	
-	return id;
 	
 }
 
@@ -1359,7 +1363,7 @@ void paises(){
 	system("cls");
 	
 	FILE *paises;
-	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0;
+	int i, quant=1, confirma, ver, ultimoid=0, contador=0, j=0, sair;
 	char caminho[40] = "C:/Gestao Olimpiada/paises.txt";
 	char nomes[40][15];
 	char nome[40];
@@ -1371,11 +1375,10 @@ void paises(){
 	//printf("Informe quantos países deseja cadastrar:\n");
 	//scanf("%d", &quant);
 	
-	Paises pais[quant];
-	Paises paise;
+	Paises pais;
 	Paises Paisescadastrados[100];
 	
-	 memset(pais, 0, (size_t)quant * sizeof(pais));
+	 memset(&pais, 0, sizeof(Paises));
 		
 	if(paises != NULL)
 	{
@@ -1385,19 +1388,21 @@ void paises(){
 		}
 		else		
 		{
-			fseek(paises, -1*sizeof(Paises),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
-  			fread(&paise, sizeof(Paises), 1, paises); //ler o ultimo registro
-  			ultimoid = paise.idNUm;
+			/*fseek(paises, -1*sizeof(Paises),SEEK_END);//saltar do final do arquivo (SEEK_END) para o inicio do ultimo registro
+  			fread(&paise, sizeof(Paises), 1, paises); //ler o ultimo registro*/
+  			//ultimoid = paise.idNUm;
+  			ultimoid = ultimo_id(caminho, "pais");
   				
   				
-  			rewind(paises);
+  			//rewind(paises);
   	
 	 		while(!feof(paises))
 		  	{
-				fread(&paise, sizeof(Paises), 1, paises);
-				Paisescadastrados[contador] = paise;
+				fread(&pais, sizeof(Paises), 1, paises);
+				Paisescadastrados[contador] = pais;
 				contador++;			
 			}
+			
 		
 			while(j<=ultimoid)
 			{
@@ -1412,14 +1417,18 @@ void paises(){
 			printf("                                   CADASTRO PAISES \n");
 			printf("---------------------------------------------------------------------------------------------\n\n");
 		
-		for(i=0;i<quant;i++)
-		{
+		//for(i=0;i<quant;i++)
+		do{
 			
 		
 			
 			int pai = 0, compara=0;
 			
-			pais[i].idNUm = ultimoid+1;
+			//ultimoid = ultimo_id(caminho, "pais");
+			
+			contador = 0;
+			
+			pais.idNUm = ultimoid+1;
 			
 			
 			printf("insira o nome do país:\n");
@@ -1437,29 +1446,24 @@ void paises(){
 						menuprincipal();
 					}
 					else{
-						strcpy(pais[i].nomes, nome);
+						strcpy(pais.nomes, nome);
 					}
 				
 			}
 			
-			pais[i].medalhasOuro = 0;
-			pais[i].medalhasPrata = 0;
-			pais[i].medalhasbronze = 0;
+			pais.medalhasOuro = 0;
+			pais.medalhasPrata = 0;
+			pais.medalhasbronze = 0;
 			
-			if(i+1 == quant){
+			
 				printf("Deseja visualizar o nome informado ?\nDigite 1 para SIM e 0 para NÂO:\n");
 				scanf("%d", &ver);
 				
 				if(ver == 1){
-					int j = 0;
-					
-					while(j < quant){
-						printf("Id: %d \n", pais[j].idNUm);
-						printf("Pais: %s \n\n", pais[j].nomes);
-						j++;
-					}
-					
-					
+				
+					printf("Id: %d \n", pais.idNUm);
+					printf("Pais: %s \n\n", pais.nomes);
+						
 					printf("Confirma as informações ? \nDigite 1 para SIM e 0 para NÂO:\n");
 					scanf("%d", &confirma);
 					
@@ -1468,19 +1472,47 @@ void paises(){
 						fseek(paises, 0, SEEK_END);
 						fwrite(&pais, sizeof(Paises), 1, paises);
 						printf("Dados salvos com sucesso!!\n");
-						fclose(paises);
-						sleep(2);
-						menuprincipal();
+						
+						
+						printf("Deseja cadastrar mais paises?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+						
+						if(sair == 1)
+						{
+							ultimoid = pais.idNUm;
+							
+							rewind(paises);
+							
+							while(!feof(paises))
+							 	{
+								fread(&pais, sizeof(Paises), 1, paises);
+								Paisescadastrados[contador] = pais;
+								contador++;			
+							}
+							
+							j=0;
+							
+							while(j<=ultimoid)
+							{
+								strcpy(nomes[j], Paisescadastrados[j].nomes);
+								j++;
+							}
+							
+						}
+						else
+						{
+							fclose(paises);
+							sleep(2);
+							menuprincipal();
+						}
+						
 					}
 					else{
 						printf("Os dados não foram salvos!!\n");
 						sleep(2);
 						system("cls");
-						printf("---------------------------------------------------------------------------------------------\n");
-						printf("                                   CADASTRO PAISES \n");
-						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf("Entre novamente com os dados.\n");
-						i--;
+						printf("Deseja cadastrar mais paises?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
 						
 					}
 					
@@ -1494,19 +1526,51 @@ void paises(){
 						fseek(paises, 0, SEEK_END);
 						fwrite(&pais, sizeof(Paises), 1, paises);
 						printf("Dados salvos com sucesso!!\n");
-						fclose(paises);
-						sleep(2);
-						menuprincipal();
+						printf("\n");
+						printf("Deseja cadastrar mais paises?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+						
+						if(sair == 1)
+						{
+							ultimoid = pais.idNUm;
+							
+								rewind(paises);
+								
+								while(!feof(paises))
+							  	{
+									fread(&pais, sizeof(Paises), 1, paises);
+									Paisescadastrados[contador] = pais;
+									contador++;			
+								}
+								
+								j=0;
+							
+								while(j<=ultimoid)
+								{
+									strcpy(nomes[j], Paisescadastrados[j].nomes);
+									j++;
+								}
+								
+						}
+						else
+						{
+							fclose(paises);
+							sleep(2);
+							menuprincipal();
+						}
+					
 					}
 					else{
 						printf("Os dados não foram salvos!!\n");
 						fclose(paises);
-						sleep(2);
-						menuprincipal();
+						printf("\n");
+						printf("Deseja cadastrar mais paises?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+					
 						}
 					}
-				}
-			}		
+				
+			}while(sair!=0);		
 		}		
 
 }
@@ -2529,7 +2593,8 @@ void eventos(){
 	FILE *pais;
 	FILE *modalidade;
 	FILE *localjogo;
-	int idMod, idpais, idevento,idlocais, sair,contador=0, j=0, quantpais, pa, i, modali, dia, mes, ano, hora, minuto, locs, ver, confirma;
+	int idMod, idpais, idevento=0,idlocais, sair,contador=0, j=0, quantpais, pa, i, modali, dia, mes, ano, hora, minuto, locs, ver, confirma;
+	int maxDia=3, difDia;
 	
 	char caminho[] = "C:/Gestao Olimpiada/eventos.txt";
 	char caminhoMod[] = "C:/Gestao Olimpiada/modalidades.txt";
@@ -2551,16 +2616,21 @@ void eventos(){
 	modalidade = fopen(caminhoMod, "r");
 	localjogo = fopen(caminholocais, "r");
 	
-	idMod = ultimo_id(caminhoMod, "modalidade");
-	idpais = ultimo_id(caminhopais, "pais");
-	idevento = ultimo_id(caminho, "evento");
-	idlocais = ultimo_id(caminholocais, "localjogo");
+
 	
 	if(evento != NULL)
 	{
 		
 		if(pais != NULL && modalidade != NULL && localjogo != NULL )
 		{
+			
+				idMod = ultimo_id(caminhoMod, "modalidade");
+				idpais = ultimo_id(caminhopais, "pais");
+				idevento = ultimo_id(caminho, "evento");
+				idlocais = ultimo_id(caminholocais, "localjogo");
+			
+			
+			
 			while(!feof(pais))
 			{
 				fread(&paises, sizeof(Paises),1, pais);
@@ -2616,7 +2686,6 @@ void eventos(){
 			printf("                                   CADASTRO EVENTOS \n");
 			printf("---------------------------------------------------------------------------------------------\n\n");
 			
-			
 			eventos.idNum = idevento+1;
 			
 			printf("Insira o nome do evento:\n");
@@ -2651,6 +2720,8 @@ void eventos(){
 			  if(quantpais == 0 || quantpais == idpais )
 				{
 					i=0;
+				
+					eventos.quantpais = idpais;
 			
 					while(i < idpais)
 					{
@@ -2663,6 +2734,8 @@ void eventos(){
 				}
 				else if (quantpais == 1)
 				{
+					eventos.quantpais = 1;
+					
 					printf("Escolha o pais:\n");
 					scanf("%d", &pa);
 					
@@ -2684,6 +2757,8 @@ void eventos(){
 					
 					while(i < quantpais)
 					{
+							eventos.quantpais = quantpais;
+							
 							printf("Escolha o %d pais:\n", i+1);
 							scanf("%d", &pa);
 							
@@ -2882,7 +2957,20 @@ void eventos(){
 			if(eventos.dataTermino.mes > 5 && eventos.dataTermino.mes <= 8)
 			{
 					if(dia >= eventos.dataInico.dia)
-						eventos.dataTermino.dia = dia;
+						{
+							difDia = dia - eventos.dataInico.dia;
+						
+							if(difDia > 3)
+							{
+								printf("Data final deve ser menor que três dias!!\n");
+								sleep(2);
+								menuprincipal();
+							}
+							else
+							{
+								eventos.dataTermino.dia = dia;
+							}
+						}
 					else
 					{
 						printf("Dia inválido.\n");
@@ -2898,7 +2986,7 @@ void eventos(){
 				sleep(2);
 				menuprincipal();
 			}
-			
+				
 			eventos.dataTermino.ano = 2024;
 			
 			printf("Insira a hora de termino.\n");
@@ -2940,8 +3028,9 @@ void eventos(){
 					}
 							
 				}
-				else if(eventos.dataTermino.dia > eventos.dataInico.dia)
+				else if(eventos.dataTermino.dia > eventos.dataInico.dia )
 				{
+					
 					if(hora >= eventos.dataInico.hora || minuto >= eventos.dataInico.minuto || hora <= eventos.dataInico.hora || minuto <= eventos.dataInico.minuto)
 					{
 						eventos.dataTermino.hora = hora;
@@ -3007,7 +3096,7 @@ void eventos(){
 					{
 						fseek(evento, 0, SEEK_END);
 						fwrite(&eventos, sizeof(Evento),1, evento);
-						fclose(evento);
+					
 						
 						printf("Dados salvos com sucesso!!\n");
 						printf("\n\n");
@@ -3016,7 +3105,12 @@ void eventos(){
 						
 						if(sair == 1)
 						{
+							
 							idevento = eventos.idNum;
+						}
+						else
+						{
+							fclose(evento);
 						}
 						
 					}
@@ -3026,6 +3120,11 @@ void eventos(){
 						printf("\n\n");
 						printf("Deseja cadastrar mais eventos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
 						scanf("%d", &sair);
+						
+						if(sair != 1)
+						{
+							fclose(evento);
+						}
 						
 					}
 					
@@ -3039,7 +3138,6 @@ void eventos(){
 					{
 						fseek(evento, 0, SEEK_END);
 						fwrite(&eventos, sizeof(Evento),1, evento);
-						fclose(evento);
 						
 						printf("Dados salvos com sucesso!!\n");
 						printf("Deseja cadastrar mais eventos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
@@ -3048,6 +3146,11 @@ void eventos(){
 						if(sair == 1)
 						{
 							idevento = eventos.idNum;
+							
+						}
+						else
+						{
+							fclose(evento);
 						}
 					}
 					else
@@ -3055,6 +3158,12 @@ void eventos(){
 						printf("Os dados não foram salvos!!\n");
 						printf("Deseja cadastrar mais eventos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
 						scanf("%d", &sair);
+						
+						if(sair != 1)
+						{
+							fclose(evento);
+						}
+						
 					}
 				}
 		
@@ -3177,9 +3286,89 @@ void cadastros(int cadastros){
 	}
 	
 void calendario(){
-	printf("Calendario Olimpico \n");
-	sleep(4);
-	menuprincipal();
+	//printf("Calendario Olimpico \n");
+	//sleep(4);
+	//menuprincipal();
+	
+	FILE *eventos;
+	
+	int idevento, contador=0, j, quantpaises[100], quant=0;
+	char caminho[] = "C:/Gestao Olimpiada/eventos.txt";
+	char caminho1[] = "C:/Gestao Olimpiada/paises.txt";
+	
+	eventos = fopen(caminho, "r");
+	
+	Evento evento;
+	Evento event[100];
+	Paises paises[100];
+
+	if(eventos != NULL && get_size(caminho) != 0)
+	{
+			idevento = ultimo_id(caminho, "evento");
+			quant = ultimo_id(caminho1, "pais");
+			
+				while(!feof(eventos))
+					{
+						fread(&evento, sizeof(Evento),1,eventos);
+						event[contador] = evento;
+						quantpaises[contador] = event[contador].quantpais;	
+						contador++;
+					}
+					
+					fclose(eventos);
+					
+					printf("---------------------------------------------------------------------------------------------\n");
+					printf("                                   CALENDARIO EVENTOS \n");
+					printf("---------------------------------------------------------------------------------------------\n\n");
+					
+					contador = 0;
+					
+					while(contador<idevento)
+					{
+						//printf("Id %d\n", event[contador].idNum);
+						printf("Nome do evento: %s\n", event[contador].nome);
+						printf("Tipo de evento: %s\n", event[contador].tipo);
+						
+							j = 0;
+						
+						
+							while(j < quantpaises[j])
+							{
+							
+								if(quantpaises[j] == quant)
+								{
+									printf("Paises participantes: %s\n", event[contador].pais[j].nomes);
+								}
+								else
+								{
+									printf("Pais %d %s \n", j+1, event[contador].pais[j].nomes);
+								}
+							
+								j++;
+							
+							}
+						
+						
+						printf("Data inicio: %2d/%02d/%d\n", event[contador].dataInico.dia, event[contador].dataInico.mes, event[contador].dataInico.ano);
+						printf("Data término: %02d/%02d/%d\n", event[contador].dataTermino.dia, event[contador].dataTermino.mes, event[contador].dataTermino.ano);
+						printf("Hora inicio: %02d:%02d\n", event[contador].dataInico.hora, event[contador].dataInico.minuto);
+						printf("Hora término: %02d:%02d\n\n", event[contador].dataTermino.hora, event[contador].dataTermino.minuto);
+					
+						contador++;
+					}
+					
+					system("pause");
+					sleep(2);	
+					menuprincipal();			
+	}
+	else
+	{
+		printf("Nenhum evento cadastradado!!\n");
+		sleep(2);
+		menuprincipal();
+	}
+	
+	
 }	
 
 
