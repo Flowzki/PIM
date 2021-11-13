@@ -8,22 +8,28 @@
 #include <ctype.h>
 #include<stdbool.h>  
 
+// Structs
+
+typedef struct{
+	int id;
+	int total;
+	int ouro;
+	int prata;
+	int bronze;
+	
+}Medalhas;
 
 typedef struct{
 	int idNUm;
 	char nomes[20];
-	int medalhasOuro;
-	int medalhasPrata;
-	int medalhasbronze;
+	Medalhas medalhas;
 	
 }Paises;
 
 typedef struct{
 	int idNUm;
 	char modalidades[20];
-	int medalhasOuro;
-	int medalhasPrata;
-	int medalhasbronze;
+	Medalhas medalhas;
 	
 }Modalidades;
 
@@ -33,9 +39,7 @@ typedef struct{
 	char sobrenome[20];
 	char modalidade[20];
 	char pais[20];
-	int medalhasOuro;
-	int medalhasPrata;
-	int medalhasbronze;
+	Medalhas medalhas;
 	
 }Atleta;
 
@@ -124,6 +128,193 @@ typedef struct{
 	int quantpais;
 }Evento;
 
+//Fim Structs
+
+
+// Prototipos
+
+//Verifica o tamanho do arquivo txt
+int get_size(const char*);
+
+//Verifica o ultimo id, caso tenha algum cadastro, senão retorna 0
+int ultimo_id(const char*, char *);
+
+//Verifica se a data é válida
+bool validarData(int, int, int);
+
+//verifica se a hora é válida
+bool validahora(int, int);
+
+//Função para cadastrar atletas
+void cadastroAtletas();
+
+//Função para cadastrar funcionarios
+void cadastroFuncionarios();
+
+//Função para cadastrar medicos
+void cadastroMedicos();
+
+//Função para cadastrar voluntarios
+void cadastroVoluntarios();
+
+//Função para cadastrar equipes
+void cadastroEquip();
+
+//Função para cadastrar paises
+void paises();
+
+//Função para cadastrar modalidades
+void modalidades();
+
+//Função para cadastrar alojamentos
+void alojamentos();
+
+//Função para cadastrar locais de jogos
+void locaisJogos();
+
+//Função para cadastrar equipamentos
+void equipamentos();
+
+//Função para cadastrar locais de treinamento
+void centroTreinamento();
+
+//Função para cadastrar eventos
+void eventos();
+
+//Função para cadastrar medalhas
+void medalhasOlimpicas();
+
+//Função para consultar calendario
+void calendario();
+
+//Função para consultar cadastro de atletas
+void consultaAtletas();
+
+//Função para consultar cadastro de funcionarios
+void consultaFuncionarios();
+
+//Função para consultar cadastro de medicos
+void consultaMedicos();
+
+//Função para consultar cadastro de voluntarios
+void consultaVoluntarios();
+
+//Função para consultar cadastro de atletas
+void consultaEquip();
+
+//Função menu que chama as opções de consulta
+void consultarPessoasCad(int);
+
+//Função para consultar cadastro de paises
+void consultaPaises();
+
+//Função para consultar cadastro de modaliaddes
+void consultaModalidades();
+
+//Função para consultar cadastro de alojamentos
+void consultaAlojamentos();
+
+//Função para consultar cadastro de locais de jogos
+void consultaLocaisJogos();
+
+//Função para consultar cadastro de equipamentos
+void consultaEquipamentos();
+
+//Função para consultar cadastro de locais de treinamento
+void consultaCentroTreinamento();
+
+//Função menu consultas
+void consultas(int);
+
+//Função menu relatórios
+void menuRelatorios(int);
+
+//Função menus que chama as opções de cadastros
+void menus(int);
+
+//Função do menu principal
+void menuprincipal();
+
+//Função para efetuar o login
+void login();
+
+// Fim prototipos
+
+//função principal do programa
+int main(){
+	
+	
+	//Faz o programa aceitar o caracteres da lingua portugesa
+	setlocale(LC_ALL, "portuguese");
+	system("cls");
+
+	//cria a pasta Gestão Olipiada no disco C
+	if( _mkdir( "C:/Gestao Olimpiada" ) == 0 )
+   {
+      //printf( "Directory '\\\"Gestao Olimpiada\"' was successfully created\n" );
+      fopen("C:/Gestao Olimpiada/atletas.txt","a");
+      fopen("C:/Gestao Olimpiada/alojamentos.txt","a");
+      fopen("C:/Gestao Olimpiada/centrotreinamento.txt","a");
+      fopen("C:/Gestao Olimpiada/equipamentos.txt","a");
+      fopen("C:/Gestao Olimpiada/equipes.txt","a");
+      fopen("C:/Gestao Olimpiada/funcionarios.txt","a");
+      fopen("C:/Gestao Olimpiada/locaisjogos.txt","a");
+      fopen("C:/Gestao Olimpiada/medicos.txt","a");
+      fopen("C:/Gestao Olimpiada/modalidades.txt","a");
+      fopen("C:/Gestao Olimpiada/paises.txt","a");
+      fopen("C:/Gestao Olimpiada/voluntarios.txt","a");
+      
+	
+   }
+   
+   //chama função login
+   	login();
+   		
+			  
+  /* int id;
+   
+   char caminho[] = "C:/Gestao Olimpiada/paises.txt";
+   char caminho1[] = "C:/Gestao Olimpiada/alojamentos.txt";
+   char caminho2[] = "C:/Gestao Olimpiada/atletas.txt";
+   char caminho3[] = "C:/Gestao Olimpiada/centrotreinamento.txt";
+   char caminho4[] = "C:/Gestao Olimpiada/equipamentos.txt";
+   char caminho5[] = "C:/Gestao Olimpiada/equipes.txt";
+   char caminho6[] = "C:/Gestao Olimpiada/funcionarios.txt";
+   char caminho7[] = "C:/Gestao Olimpiada/locaisjogos.txt";
+   char caminho8[] = "C:/Gestao Olimpiada/medicos.txt";
+   char caminho9[] = "C:/Gestao Olimpiada/modalidades.txt";
+   char caminho10[] = "C:/Gestao Olimpiada/voluntarios.txt";
+   
+   id = ultimo_id(caminho, "pais");
+    printf(" %d Paises cadastrados.\n", id);
+   id = ultimo_id(caminho1, "alojamento");
+     printf(" %d Alojamentos cadastrados.\n", id);
+   id = ultimo_id(caminho2, "atleta");
+    printf(" %d Atletas cadastrados.\n", id);
+   id = ultimo_id(caminho3, "centro");
+    printf(" %d Centros de treinamentos cadastrados.\n", id);
+   id = ultimo_id(caminho4, "equipamento");
+    printf(" %d Equipamentos cadastrados.\n", id);
+   id = ultimo_id(caminho5, "equipe");
+    printf(" %d Equipes Olímpicas cadastradas.\n", id);
+   id = ultimo_id(caminho6, "funcionario");
+    printf(" %d Funcionarios Cadastrados.\n", id);
+   id = ultimo_id(caminho7, "locaisjogos");
+    printf(" %d Locais de jogos Cadastrados\n", id);
+   id = ultimo_id(caminho8, "medicos");
+    printf(" %d Medicos Cadastrados.\n", id);
+   id = ultimo_id(caminho9, "modalidade");
+    printf(" %d Modalidades cadastradas.\n", id);
+   id = ultimo_id(caminho10, "voluntario");
+    printf(" %d Voluntarios Cadastrados.\n", id);
+   
+   */
+ 
+    
+   
+     
+	return 0;
+}
 
 
 
@@ -159,6 +350,7 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	fread(&atleta, sizeof(atleta), 1, file); 
 		  	id = atleta.idNUm;
   			fclose(file);
+  			
 			return id;
 		}
 		else if(strcmp(nome, "pais")==0 && get_size(cam_arq) > 0)
@@ -342,6 +534,55 @@ bool validahora(int horas , int min)
     else return true;
     if(min>60 || min < 0)   return false;
     else return true;
+}
+
+void login(){
+	
+	char usuarioFixo[] = "admin"; //nome de login fixo
+	char usuario[20]; //nome que o usuario digita
+	char senhaFixa[] = "admin123"; //senha fixa
+	char senha[12]; //senha que o usuario digita
+	int i;
+	char ch;
+	
+	system("cls");
+	printf("---------------------------------------------------------------------------------------------\n");
+	printf("                                   SISTEMA DE GESTAO DE OLIMPIADAS \n");
+	printf("---------------------------------------------------------------------------------------------\n\n");
+	
+	printf("Faça login para acessar o sistema.\n\n");
+	
+	printf("Usuario: ");	//Entrada dos dados
+	gets(usuario);
+	printf("Senha: ");
+	for(i = 0;i < 12;i++)
+	{
+		ch = getch();
+		if(ch == 13 )
+			break;
+		
+		
+		senha[i] = ch;
+		
+		ch = '*' ;
+		printf("%c", ch);
+	}
+	senha[i] = '\0';
+	
+	
+	
+	printf("\n"); //quebra de linha para separar
+	
+	if ((strcmp(usuario, usuarioFixo) == 0) && strcmp(senha, senhaFixa) == 0) {	//verifica usuario e senha
+			printf("\nLogin efetuado com sucesso!\n");	
+   			sleep(2);
+   			menuprincipal(); 
+	}
+	else {
+			printf("\nUsuario ou senha incorretos, tente novamente.");
+			sleep(2);
+			main();
+	}
 }
 
 void cadastroAtletas(){
@@ -534,9 +775,9 @@ void cadastroAtletas(){
 						i--;
 					}
 					
-					atleta[i].medalhasOuro = 0;
-					atleta[i].medalhasPrata = 0;
-					atleta[i].medalhasbronze = 0;
+					atleta[i].medalhas.ouro = 0;
+					atleta[i].medalhas.prata = 0;
+					atleta[i].medalhas.bronze = 0;
 						
 						
 					system("cls");
@@ -550,9 +791,9 @@ void cadastroAtletas(){
 							printf("Nome: %s \n",atleta[i].nome);
 							printf("Sobrenome: %s \n", atleta[i].sobrenome);
 							printf("Modalidade: %s \n",atleta[i].modalidade);
-							printf("Medalhas de ouro: %d \n",atleta[i].medalhasOuro);
-							printf("Medalhas de prata: %d \n",atleta[i].medalhasPrata);
-							printf("Medalhas de bronze: %d \n",atleta[i].medalhasbronze);
+							printf("Medalhas de ouro: %d \n",atleta[i].medalhas.ouro);
+							printf("Medalhas de prata: %d \n",atleta[i].medalhas.prata);
+							printf("Medalhas de bronze: %d \n",atleta[i].medalhas.bronze);
 							
 							printf("\n");
 							printf("Confirma as informações?\nDigite 1 para SIM e 0 para NÂO:\n");
@@ -1451,9 +1692,10 @@ void paises(){
 				
 			}
 			
-			pais.medalhasOuro = 0;
-			pais.medalhasPrata = 0;
-			pais.medalhasbronze = 0;
+			pais.medalhas.ouro = 0;
+			pais.medalhas.prata = 0;
+			pais.medalhas.bronze = 0;
+			pais.medalhas.total = 0;
 			
 			
 				printf("Deseja visualizar o nome informado ?\nDigite 1 para SIM e 0 para NÂO:\n");
@@ -1665,9 +1907,10 @@ void modalidades(){
 			}
 			
 			
-			modalidades[i].medalhasOuro = 0;
-			modalidades[i].medalhasPrata = 0;
-			modalidades[i].medalhasbronze = 0;
+			modalidades[i].medalhas.ouro = 0;
+			modalidades[i].medalhas.prata = 0;
+			modalidades[i].medalhas.bronze = 0;
+			modalidades[i].medalhas.total = 0;
 			
 			if(i+1 == quant)
 			{
@@ -3183,6 +3426,239 @@ void eventos(){
 
 }
 
+void medalhasOlimpicas()
+{
+	FILE *medalha;
+	char caminho[] = "C:/Gestao Olimpiada/medalhas.txt";
+	int opcao, alterar, quant, ouro, prata, bronze, ver, confirma;
+	
+	medalha = fopen(caminho, "a+");
+	
+	Medalhas medalhas;
+	Medalhas medal;
+	Medalhas alterarQuant;
+	
+	memset(&medalhas,0,sizeof(Medalhas));
+	
+	if(medalha != NULL)
+	{
+		if(get_size(caminho) !=0)
+		{
+			printf("Deseja alterar a quantidade de medalhas cadastradas ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+			scanf("%d", &opcao);
+			
+			if(opcao == 1)
+			{
+				
+				while(!feof(medalha))
+				{
+					fread(&medalhas, sizeof(Medalhas),1,medalha);
+					medal = medalhas;
+				}
+				
+				printf("Escolha qual deseja alterar:\n");
+				printf("[1] %d de Ouro \n", medal.ouro);
+				printf("[2] %d de Prata \n", medal.prata);
+				printf("[3] %d de bronze \n", medal.bronze);
+				printf(" %d total de medalhas \n\n", medal.total);
+				
+				printf("Escolha uma opção.\n");
+				scanf("%d", &opcao);
+				
+				if(opcao > 0 && opcao < 4)
+				{
+					if(opcao == 1)
+					{
+						printf("Insira a nova quantidade de medalhas de ouro\n");
+						scanf("%d", &quant);
+						
+						if(quant > 0 && quant < 200 )
+						{	
+						    rewind(medalha);
+						    
+						    alterarQuant.id = 1;
+						  	alterarQuant.ouro = quant;
+						  	alterarQuant.prata = medal.prata;
+						  	alterarQuant.bronze = medal.bronze;
+						  	alterarQuant.total = alterarQuant.ouro + alterarQuant.prata + alterarQuant.bronze;
+						  	
+						  	fwrite(&alterarQuant,sizeof(Medalhas),1,medalha);
+						  	fclose(medalha);
+						  	
+						  	printf("Quantidade alterada com sucesso!!\n");
+						  	sleep(2);
+						  	menuprincipal();
+						  	
+						}
+						else
+						{
+							printf("Quantidade inválida!!\n");
+							sleep(2);
+							menuprincipal();
+						}
+					}
+					else if(opcao == 2)
+					{
+						printf("Insira a nova quantidade de medalhas de prata\n");
+						scanf("%d", &quant);
+						
+						if(quant > 0 && quant < 200 )
+						{	
+							rewind(medalha);
+						    
+						    alterarQuant.id = 1;
+						  	alterarQuant.ouro = medal.ouro;
+						  	alterarQuant.prata = quant;
+						  	alterarQuant.bronze = medal.bronze;
+						  	alterarQuant.total = alterarQuant.ouro + alterarQuant.prata + alterarQuant.bronze;
+						  	
+						  	fwrite(&alterarQuant,sizeof(Medalhas),1,medalha);
+						  	fclose(medalha);
+						  	
+						  	printf("Quantidade alterada com sucesso!!\n");
+						  	sleep(2);
+						  	menuprincipal();
+						}
+						else
+						{
+							printf("Quantidade inválida!!\n");
+							sleep(2);
+							menuprincipal();
+						}
+						
+					}
+					else if(opcao == 3)
+					{
+						printf("Insira a nova quantidade de medalhas de bronze\n");
+						scanf("%d", &quant);
+						
+						if(quant > 0 && quant < 200 )
+						{	
+							rewind(medalha);
+						    
+						    alterarQuant.id = 1;
+						  	alterarQuant.ouro = medal.ouro;
+						  	alterarQuant.prata = medal.prata;
+						  	alterarQuant.bronze = quant;
+						  	alterarQuant.total = alterarQuant.ouro + alterarQuant.prata + alterarQuant.bronze;
+						  	
+						  	fwrite(&alterarQuant,sizeof(Medalhas),1,medalha);
+						  	fclose(medalha);
+						  	
+						  	printf("Quantidade alterada com sucesso!!\n");
+						  	sleep(2);
+						  	menuprincipal();	
+						}
+						else
+						{
+							printf("Quantidade inválida!!\n");
+							sleep(2);
+							menuprincipal();
+						}
+						
+					}
+					else
+					{
+						printf("Opção inválida!!\n");
+						sleep(2);
+						menuprincipal();
+					}
+				}
+				else
+				{
+					printf("Opção inválida!!\n");
+					sleep(2);
+					menuprincipal();
+				}
+			}
+		}
+		else
+		{
+			printf("Informe as quantidades de medalhas de ouro, prata e bronze.\n");
+			
+			printf("Medalhas de ouro:\n");
+			scanf("%d", &ouro);
+			
+			printf("Medalhas de prata:\n");
+			scanf("%d", &prata);
+			
+			printf("Medalhas de bronze:\n");
+			scanf("%d", &bronze);
+			
+			if(ouro > 0 && ouro < 200 && prata > 0 && prata < 200 && bronze > 0 && prata < 200)
+			{
+				medalhas.id = 1;
+				medalhas.ouro = ouro;
+				medalhas.prata = prata;
+				medalhas.bronze = bronze;
+				medalhas.total = medalhas.ouro + medalhas.prata + medalhas.bronze;
+				
+				printf("Deseja ver as informações digitadas ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+				scanf("%d", &ver);
+				
+				if(ver == 1)
+				{
+					printf("Medalhas de ouro: %d\n", medalhas.ouro);
+					printf("Medalhas de prata: %d\n", medalhas.prata);
+					printf("Medalhas de bronze: %d\n", medalhas.bronze);
+					printf("Total de medalhas: %d\n\n", medalhas.total);
+					
+					printf("Confirma as informações ?\nDigite 1 para SIM  ou 0 para NÃO.\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(medalha, 0 , SEEK_END);
+						fwrite(&medalhas, sizeof(Medalhas),1,medalha);
+						fclose(medalha);
+						
+						printf("Dados salvos com sucesso!!\n");
+						
+						sleep(2);
+						menuprincipal();
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						menuprincipal();
+					}
+				}
+				else
+				{
+					printf("Confirma as informações ?\nDigite 1 para SIM  ou 0 para NÃO.\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(medalha, 0 , SEEK_END);
+						fwrite(&medalhas, sizeof(Medalhas),1,medalha);
+						fclose(medalha);
+						
+						printf("Dados salvos com sucesso!!\n");
+						
+						sleep(2);
+						menuprincipal();
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						sleep(2);
+						menuprincipal();
+					}
+				}
+				
+			}
+			else
+			{ 
+				printf("Quantidade inválida!!\n");
+				sleep(2);
+				menuprincipal();
+			}
+		}
+	}
+}
+
 void cadastro(int opcao){
 	
 	switch(opcao)
@@ -3275,7 +3751,12 @@ void cadastros(int cadastros){
 			case 8:
 				system("cls");
 				eventos();
-				break;				
+				break;
+								
+			case 9:
+				system("cls");
+				medalhasOlimpicas();
+				break;					
 						
 			default:
 				printf(" Opcao invalida");
@@ -3416,9 +3897,10 @@ void consultaAtletas()
 	   					strcpy(atlet[i].sobrenome, atleta.sobrenome);
 	   					strcpy(atlet[i].pais, atleta.pais);
 	   					strcpy(atlet[i].modalidade, atleta.modalidade);
-	   					atlet[i].medalhasOuro = atleta.medalhasOuro;
-	   					atlet[i].medalhasPrata = atleta.medalhasPrata;
-	   					atlet[i].medalhasbronze = atleta.medalhasbronze;
+	   					atlet[i].medalhas.ouro = atleta.medalhas.ouro;
+	   					atlet[i].medalhas.prata = atleta.medalhas.prata;
+	   					atlet[i].medalhas.bronze = atleta.medalhas.bronze;
+	   					atlet[i].medalhas.total = atleta.medalhas.total;
 	   					i++;
 						
 					}
@@ -3439,9 +3921,10 @@ void consultaAtletas()
 						printf("Sobrenome: %s \n", atlet[i].sobrenome);
 						printf("Modalidade: %s \n",atlet[i].modalidade);
 						printf("País: %s \n",atlet[i].pais);
-						printf("Medalhas de ouro: %d \n",atlet[i].medalhasOuro);
-						printf("Medalhas de prata: %d \n",atlet[i].medalhasPrata);
-						printf("Medalhas de bronze: %d \n\n",atlet[i].medalhasbronze);
+						printf("Medalhas de ouro: %d \n",atlet[i].medalhas.ouro);
+						printf("Medalhas de prata: %d \n",atlet[i].medalhas.prata);
+						printf("Medalhas de bronze: %d \n",atlet[i].medalhas.bronze);
+						printf("Toatl de medalhas: %d \n\n",atlet[i].medalhas.total);
 	   					
 						i++;	
 					}
@@ -3546,6 +4029,7 @@ void consultaEquip(){
 
 void  consultarPessoasCad(int op){
 	
+	
 	switch(op)
 	{
 		case 1:
@@ -3606,9 +4090,10 @@ void consultaPaises(){
 	   				 	fread(&pais, sizeof(Paises), 1, paises);
 	   					pai[i].idNUm = pais.idNUm;
 	   					strcpy(pai[i].nomes, pais.nomes);
-	   					pai[i].medalhasOuro = pais.medalhasOuro;
-	   					pai[i].medalhasPrata = pais.medalhasPrata;
-	   					pai[i].medalhasbronze = pais.medalhasbronze;
+	   					pai[i].medalhas.ouro = pais.medalhas.ouro;
+	   					pai[i].medalhas.prata = pais.medalhas.prata;
+	   					pai[i].medalhas.bronze = pais.medalhas.bronze;
+	   					pai[i].medalhas.total = pais.medalhas.total;
 	   				
 	   					i++;
 						
@@ -3627,9 +4112,10 @@ void consultaPaises(){
 					{
 						printf("Id: %d \n",pai[i].idNUm);
 						printf("Nome: %s \n",pai[i].nomes);
-						printf("Medalhas de Ouro: %d \n",pai[i].medalhasOuro);
-						printf("Medalhas de Prata: %d \n",pai[i].medalhasPrata);
-						printf("Medalhas de Bronze: %d \n\n",pai[i].medalhasbronze);
+						printf("Medalhas de Ouro: %d \n",pai[i].medalhas.ouro);
+						printf("Medalhas de Prata: %d \n",pai[i].medalhas.prata);
+						printf("Medalhas de Bronze: %d \n",pai[i].medalhas.bronze);
+						printf("Total de medalhas: %d \n\n",pai[i].medalhas.total);
 					
 					
 						i++;	
@@ -3788,7 +4274,7 @@ void menuRelatorios(int opcao){
 	
 }
 
-void menus(opcao){
+void menus(int opcao){
 	
 	int cadastro, relatorios;
 	
@@ -3799,13 +4285,13 @@ void menus(opcao){
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   CADASTROS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Eventos \n [9] Voltar \n\n");
+						printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Eventos \n [9] Medalhas \n [10] Voltar \n\n");
 						printf(" Escolha uma das opcoes: \n");
 						scanf("%d", &cadastro);
 						
-						if(cadastro > 0 && cadastro < 9 )
+						if(cadastro > 0 && cadastro < 10 )
 							cadastros(cadastro);	
-						else if(cadastro == 9)
+						else if(cadastro == 10)
 						{
 							//sleep(1);
 							menuprincipal();
@@ -3888,130 +4374,4 @@ void menuprincipal()
 				menuprincipal();
 			}
 	
-}
-
-void login(){
-	
-	char usuarioFixo[] = "admin"; //nome de login fixo
-	char usuario[20]; //nome que o usuario digita
-	char senhaFixa[] = "admin123"; //senha fixa
-	char senha[12]; //senha que o usuario digita
-	int i;
-	char ch;
-	
-	system("cls");
-	printf("---------------------------------------------------------------------------------------------\n");
-	printf("                                   SISTEMA DE GESTAO DE OLIMPIADAS \n");
-	printf("---------------------------------------------------------------------------------------------\n\n");
-	
-	printf("Faça login para acessar o sistema.\n\n");
-	
-	printf("Usuario: ");	//Entrada dos dados
-	gets(usuario);
-	printf("Senha: ");
-	for(i = 0;i < 12;i++)
-	{
-		ch = getch();
-		if(ch == 13 )
-			break;
-		
-		
-		senha[i] = ch;
-		
-		ch = '*' ;
-		printf("%c", ch);
-	}
-	senha[i] = '\0';
-	
-	
-	
-	printf("\n"); //quebra de linha para separar
-	
-	if ((strcmp(usuario, usuarioFixo) == 0) && strcmp(senha, senhaFixa) == 0) {	//verifica usuario e senha
-			printf("\nLogin efetuado com sucesso!\n");	
-   			sleep(2);
-   			menuprincipal(); 
-	}
-	else {
-			printf("\nUsuario ou senha incorretos, tente novamente.");
-			sleep(2);
-			main();
-	}
-}
-
-int main(){
-	
-	//ICON "logo.ico";
-	
-	setlocale(LC_ALL, "portuguese");
-	system("cls");
-	
-	bool isloggged = false;
-
-	
-	if( _mkdir( "C:/Gestao Olimpiada" ) == 0 )
-   {
-      //printf( "Directory '\\\"Gestao Olimpiada\"' was successfully created\n" );
-      fopen("C:/Gestao Olimpiada/atletas.txt","a");
-      fopen("C:/Gestao Olimpiada/alojamentos.txt","a");
-      fopen("C:/Gestao Olimpiada/centrotreinamento.txt","a");
-      fopen("C:/Gestao Olimpiada/equipamentos.txt","a");
-      fopen("C:/Gestao Olimpiada/equipes.txt","a");
-      fopen("C:/Gestao Olimpiada/funcionarios.txt","a");
-      fopen("C:/Gestao Olimpiada/locaisjogos.txt","a");
-      fopen("C:/Gestao Olimpiada/medicos.txt","a");
-      fopen("C:/Gestao Olimpiada/modalidades.txt","a");
-      fopen("C:/Gestao Olimpiada/paises.txt","a");
-      fopen("C:/Gestao Olimpiada/voluntarios.txt","a");
-      
-	
-   }
-   
-   
-   	login();
-   		
-			  
-  /* int id;
-   
-   char caminho[] = "C:/Gestao Olimpiada/paises.txt";
-   char caminho1[] = "C:/Gestao Olimpiada/alojamentos.txt";
-   char caminho2[] = "C:/Gestao Olimpiada/atletas.txt";
-   char caminho3[] = "C:/Gestao Olimpiada/centrotreinamento.txt";
-   char caminho4[] = "C:/Gestao Olimpiada/equipamentos.txt";
-   char caminho5[] = "C:/Gestao Olimpiada/equipes.txt";
-   char caminho6[] = "C:/Gestao Olimpiada/funcionarios.txt";
-   char caminho7[] = "C:/Gestao Olimpiada/locaisjogos.txt";
-   char caminho8[] = "C:/Gestao Olimpiada/medicos.txt";
-   char caminho9[] = "C:/Gestao Olimpiada/modalidades.txt";
-   char caminho10[] = "C:/Gestao Olimpiada/voluntarios.txt";
-   
-   id = ultimo_id(caminho, "pais");
-    printf(" %d Paises cadastrados.\n", id);
-   id = ultimo_id(caminho1, "alojamento");
-     printf(" %d Alojamentos cadastrados.\n", id);
-   id = ultimo_id(caminho2, "atleta");
-    printf(" %d Atletas cadastrados.\n", id);
-   id = ultimo_id(caminho3, "centro");
-    printf(" %d Centros de treinamentos cadastrados.\n", id);
-   id = ultimo_id(caminho4, "equipamento");
-    printf(" %d Equipamentos cadastrados.\n", id);
-   id = ultimo_id(caminho5, "equipe");
-    printf(" %d Equipes Olímpicas cadastradas.\n", id);
-   id = ultimo_id(caminho6, "funcionario");
-    printf(" %d Funcionarios Cadastrados.\n", id);
-   id = ultimo_id(caminho7, "locaisjogos");
-    printf(" %d Locais de jogos Cadastrados\n", id);
-   id = ultimo_id(caminho8, "medicos");
-    printf(" %d Medicos Cadastrados.\n", id);
-   id = ultimo_id(caminho9, "modalidade");
-    printf(" %d Modalidades cadastradas.\n", id);
-   id = ultimo_id(caminho10, "voluntario");
-    printf(" %d Voluntarios Cadastrados.\n", id);
-   
-   */
- 
-    
-   
-     
-	return 0;
 }
