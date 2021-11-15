@@ -226,6 +226,9 @@ void consultaEquipamentos();
 //Função para consultar cadastro de locais de treinamento
 void consultaCentroTreinamento();
 
+//Mostra o total de cada cadastro realizado
+void consultaNumerosdeCadastros();
+
 //Função menu consultas
 void consultas(int);
 
@@ -272,50 +275,7 @@ int main(){
    
    //chama função login
    	login();
-   		
-			  
-  /* int id;
-   
-   char caminho[] = "C:/Gestao Olimpiada/paises.txt";
-   char caminho1[] = "C:/Gestao Olimpiada/alojamentos.txt";
-   char caminho2[] = "C:/Gestao Olimpiada/atletas.txt";
-   char caminho3[] = "C:/Gestao Olimpiada/centrotreinamento.txt";
-   char caminho4[] = "C:/Gestao Olimpiada/equipamentos.txt";
-   char caminho5[] = "C:/Gestao Olimpiada/equipes.txt";
-   char caminho6[] = "C:/Gestao Olimpiada/funcionarios.txt";
-   char caminho7[] = "C:/Gestao Olimpiada/locaisjogos.txt";
-   char caminho8[] = "C:/Gestao Olimpiada/medicos.txt";
-   char caminho9[] = "C:/Gestao Olimpiada/modalidades.txt";
-   char caminho10[] = "C:/Gestao Olimpiada/voluntarios.txt";
-   
-   id = ultimo_id(caminho, "pais");
-    printf(" %d Paises cadastrados.\n", id);
-   id = ultimo_id(caminho1, "alojamento");
-     printf(" %d Alojamentos cadastrados.\n", id);
-   id = ultimo_id(caminho2, "atleta");
-    printf(" %d Atletas cadastrados.\n", id);
-   id = ultimo_id(caminho3, "centro");
-    printf(" %d Centros de treinamentos cadastrados.\n", id);
-   id = ultimo_id(caminho4, "equipamento");
-    printf(" %d Equipamentos cadastrados.\n", id);
-   id = ultimo_id(caminho5, "equipe");
-    printf(" %d Equipes Olímpicas cadastradas.\n", id);
-   id = ultimo_id(caminho6, "funcionario");
-    printf(" %d Funcionarios Cadastrados.\n", id);
-   id = ultimo_id(caminho7, "locaisjogos");
-    printf(" %d Locais de jogos Cadastrados\n", id);
-   id = ultimo_id(caminho8, "medicos");
-    printf(" %d Medicos Cadastrados.\n", id);
-   id = ultimo_id(caminho9, "modalidade");
-    printf(" %d Modalidades cadastradas.\n", id);
-   id = ultimo_id(caminho10, "voluntario");
-    printf(" %d Voluntarios Cadastrados.\n", id);
-   
-   */
- 
-    
-   
-     
+   	
 	return 0;
 }
 
@@ -838,13 +798,13 @@ void menuRelatorios(int opcao){
 			printf("---------------------------------------------------------------------------------------------\n");
 			printf("                                   CONSULTAS DE CADASTROS \n");
 			printf("---------------------------------------------------------------------------------------------\n\n");
-			printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Voltar \n\n");
+			printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Consultar numeros de cadastros \n [9]Voltar \n\n");
 			printf(" Escolha uma das opcoes: \n");
 			scanf("%d", &consulta);
 			
-			if(consulta > 0 && consulta < 8 )
+			if(consulta > 0 && consulta < 9 )
 				consultas(consulta);	
-			else if(consulta == 8)
+			else if(consulta == 9)
 			{
 				//sleep(1);
 				menuprincipal();
@@ -925,8 +885,13 @@ void consultas(int opcao){
 			case 7:
 				system("cls");
 				consultaCentroTreinamento();
-				break;		
+				break;
 						
+			case 8:
+				system("cls");
+				consultaNumerosdeCadastros();
+				break;	
+								
 			default:
 				printf(" Opcao invalida");
 				menuprincipal();
@@ -4057,6 +4022,17 @@ void medalhasOlimpicas()
 					menuprincipal();
 				}
 			}
+			else if(opcao == 0)
+			{
+				sleep(2);
+				menuprincipal();
+			}
+			else
+			{
+				printf("Opção inválida!!\n");
+				sleep(2);
+				menuprincipal();
+			}
 		}
 		else
 		{
@@ -5046,7 +5022,7 @@ void consultaCentroTreinamento(){
 					fclose(centros);
 					
 					
-					//system("cls");
+					system("cls");
 					printf("---------------------------------------------------------------------------------------------\n");
 					printf("                                   CONSULTA CADASTRO DE CENTROS DE TREINAMENTO\n");
 					printf("---------------------------------------------------------------------------------------------\n\n");
@@ -5101,4 +5077,91 @@ void consultaCentroTreinamento(){
 		menuprincipal();
 	}
 	
+}
+
+void consultaNumerosdeCadastros()
+{
+	int id;
+   
+   char caminho[] = "C:/Gestao Olimpiada/paises.txt";
+   char caminho1[] = "C:/Gestao Olimpiada/alojamentos.txt";
+   char caminho2[] = "C:/Gestao Olimpiada/atletas.txt";
+   char caminho3[] = "C:/Gestao Olimpiada/centrotreinamento.txt";
+   char caminho4[] = "C:/Gestao Olimpiada/equipamentos.txt";
+   char caminho5[] = "C:/Gestao Olimpiada/equipes.txt";
+   char caminho6[] = "C:/Gestao Olimpiada/funcionarios.txt";
+   char caminho7[] = "C:/Gestao Olimpiada/locaisjogos.txt";
+   char caminho8[] = "C:/Gestao Olimpiada/medicos.txt";
+   char caminho9[] = "C:/Gestao Olimpiada/modalidades.txt";
+   char caminho10[] = "C:/Gestao Olimpiada/voluntarios.txt";
+   char caminho11[] = "C:/Gestao Olimpiada/medalhas.txt";
+   
+   
+   	printf("---------------------------------------------------------------------------------------------\n");
+	printf("                                   CONSULTA TOTAL DE REGISTROS\n");
+	printf("---------------------------------------------------------------------------------------------\n\n");
+   
+   id = ultimo_id(caminho, "pais");
+    printf(" %03d Paises.\n", id);
+   id = ultimo_id(caminho1, "alojamento");
+     printf(" %03d Alojamentos.\n", id);
+   id = ultimo_id(caminho2, "atleta");
+    printf(" %03d Atletas.\n", id);
+   id = ultimo_id(caminho3, "centro");
+    printf(" %03d Centros de treinamentos.\n", id);
+   id = ultimo_id(caminho4, "equipamento");
+    printf(" %03d Equipamentos.\n", id);
+   id = ultimo_id(caminho5, "equipe");
+    printf(" %03d Equipes Olímpicas.\n", id);
+   id = ultimo_id(caminho6, "funcionario");
+    printf(" %03d Funcionarios.\n", id);
+   id = ultimo_id(caminho7, "localjogo");
+    printf(" %03d Locais de jogos\n", id);
+   id = ultimo_id(caminho8, "medico");
+    printf(" %03d Medicos.\n", id);
+   id = ultimo_id(caminho9, "modalidade");
+    printf(" %03d Modalidades.\n", id);
+   id = ultimo_id(caminho10, "voluntario");
+    printf(" %03d Voluntarios.\n", id);
+   id = ultimo_id(caminho11, "medalha");
+   
+   if(id > 0)
+   {
+	   	Medalhas medalhas;
+	   	
+	   	FILE *medalha;
+	   	
+	   	medalha = fopen(caminho11, "r");
+	   	
+	   	if(medalha != NULL)
+	   	{
+	   			while(!feof(medalha))
+	   			{
+	   				fread(&medalhas, sizeof(Medalhas),1,medalha);  	
+				}
+				
+				fclose(medalha);
+				
+				printf(" %03d Medalhas de ouro.\n", medalhas.ouro);
+				printf(" %03d Medalhas de prata.\n", medalhas.prata);
+				printf(" %03d Medalhas de bronze.\n", medalhas.bronze);
+				printf(" %03d Total de medalhas.\n", medalhas.total);
+		}
+   		
+   }
+   else
+   {
+  		printf(" 000 Medalhas de ouro.\n");
+		printf(" 000 Medalhas de prata.\n");
+		printf(" 000 Medalhas de bronze.\n");
+		printf(" 000 Total de medalhas.\n");
+   }
+   	
+   	
+   	printf("\n");
+   	system("pause");
+   	sleep(1);
+   	menuprincipal();
+    
+   
 }
