@@ -73,7 +73,6 @@ typedef struct{
 	char nome[20];
 	char sobrenome[20];
 	char funcao[20];
-	//char modalidades[20];
 	char pais[20];
 	
 }EquipeOlimpica;
@@ -187,6 +186,9 @@ void medalhasOlimpicas();
 //Função para consultar calendario
 void calendario();
 
+//Função que mostra os prtocolos da covid
+void controlescovid();
+
 //Função para consultar cadastro de atletas
 void consultaAtletas();
 
@@ -269,6 +271,8 @@ int main(){
       fopen("C:/Gestao Olimpiada/modalidades.txt","a");
       fopen("C:/Gestao Olimpiada/paises.txt","a");
       fopen("C:/Gestao Olimpiada/voluntarios.txt","a");
+      fopen("C:/Gestao Olimpiada/medalhas.txt","a");
+      fopen("C:/Gestao Olimpiada/eventos.txt","a");
       
 	
    }
@@ -571,7 +575,7 @@ void menuprincipal()
 	printf("---------------------------------------------------------------------------------------------\n");
 	printf("                                   MENU PRINCIPAL \n");
 	printf("---------------------------------------------------------------------------------------------\n\n");
-	printf(" [1] Cadastros \n [2] Calendario Olimpico \n [3] Premiacao \n [4] Relatorios \n [5] Sair \n \n");
+	printf(" [1] Cadastros \n [2] Controles covid \n [3] Relatorios \n [4] Gestão \n [5] Sair \n \n");
 	printf(" Escolha uma das opcoes \n");
 	scanf("%d", &opcao);
 	
@@ -733,26 +737,21 @@ void menus(int opcao){
 						
 					case 2:
 						system("cls");
-						calendario();
+						controlescovid();
 						break;
 						
 					case 3:
 						system("cls");
-						premiacao();
-						break;
-					
-					case 4:
-						system("cls");
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   RELATORIOS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Ranking dos países \n [2] Resumo por atleta \n [3] Total de medalhas por categoria \n [4] Consulta cadastros \n [5] Voltar\n\n");
+						printf(" [1] Calendario olimpico \n [2] Ranking dos países \n [3] Resumo por atleta \n [4] Total de medalhas por categoria \n [5] Consulta cadastros \n [6] Voltar\n\n");
 						printf("Escolha uma opção:\n");
 						scanf("%d", &relatorios);
 						
-						if(relatorios > 0 && relatorios < 5)
+						if(relatorios > 0 && relatorios < 6)
 							menuRelatorios(relatorios);
-						else if(relatorios == 5)
+						else if(relatorios == 6)
 							menuprincipal();
 						else
 						{
@@ -761,6 +760,11 @@ void menus(int opcao){
 							menuprincipal();	
 						}
 							
+						break;
+						
+					case 4:
+						system("cls");
+						gestao();
 						break;
 					
 					default:
@@ -778,27 +782,30 @@ void menuRelatorios(int opcao){
 	switch(opcao)
 	{
 		case 1:
-			printf("Relatórios.\n");
-			sleep(3);
-			menuprincipal();
+			calendario();
 			break;
 		case 2:
-			/*printf("Relatórios.\n");
-			sleep(3);
-			menuprincipal();*/
-			consultaResumoatleta();
-			break;
-		case 3:
 			printf("Relatórios.\n");
 			sleep(3);
 			menuprincipal();
+			break;
+			
+		case 3:
+			consultaResumoatleta();
 			break;	
+			
 		case 4:
+			printf("Relatórios.\n");
+			sleep(3);
+			menuprincipal();
+			break;
+				
+		case 5:
 			system("cls");
 			printf("---------------------------------------------------------------------------------------------\n");
 			printf("                                   CONSULTAS DE CADASTROS \n");
 			printf("---------------------------------------------------------------------------------------------\n\n");
-			printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Consultar numeros de cadastros \n [9]Voltar \n\n");
+			printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Consultar numeros de cadastros \n [9] Voltar \n\n");
 			printf(" Escolha uma das opcoes: \n");
 			scanf("%d", &consulta);
 			
@@ -989,10 +996,277 @@ void calendario(){
 }	
 
 
-void premiacao(){
-	printf("Premiacao \n ");
-	sleep(4);
+void controlescovid(){
+	printf("---------------------------------------------------------------------------------------------\n");
+	printf("                                   PROTOCOLOS COVID \n");
+	printf("---------------------------------------------------------------------------------------------\n\n");
+	
+	printf(" Devido ao surto de covid-19, foi determinado pela OMS as medidas para combate a disseminação do covid.\n\n");
+	
+	printf("----------------------------------------------------------------------------------------------\n");
+	printf("                                    MEDIDAS PARA COMBATE/CONTROLE          \n");
+	printf("----------------------------------------------------------------------------------------------\n\n");
+	
+	printf(" 1. Aplicação de distanciamento entre as pessoas.\n");
+	printf(" 2. Limitação  de espaços para evitar aglomeração.\n");
+	printf(" 3. Pontos de alcool gel e lavagens das mãos.\n");
+	printf(" 4. Uso de mácaras obrigario para todos.\n");
+	printf(" 5. Aferição de temperatura antes da entrada.\n");
+	printf(" 6. Caso seja constatado algum sintoma a pessoa será encaminhada para testes e posteriomente o isolamento.\n");
+	printf(" 7. Caso apresentar casos positivos os eventos/disputas serão adiados.\n");
+	printf(" 8. Todos os participantes, funcionarios, organizadores, etc. Irão realizar testes a cada 15 dias.\n");
+	printf(" 9. Em caso de dúvidas ligar para a central, ou avisar o seu superior para tomar as medidas necessárias.\n\n");
+	
+	system("pause");
+	sleep(2);
 	menuprincipal();
+	
+}
+
+
+void gestao()
+{
+	system("cls");
+	
+	FILE *medalha;
+	FILE *atleta;
+	FILE *pais;
+	FILE *modalidade;
+	FILE *evento;
+	
+	char caminho[] = "C:/Gestao Olimpiada/medalhas.txt";
+	char caminho1[] = "C:/Gestao Olimpiada/atletas.txt";
+	char caminho2[] = "C:/Gestao Olimpiada/paises.txt";
+	char caminho3[] = "C:/Gestao Olimpiada/modalidades.txt";
+	char caminho4[] = "C:/Gestao Olimpiada/eventos.txt";
+
+	int idMed, idAt, idPa, idMod, idEv, j, i, opcao, id, confirma, medalhaRecebida;
+	bool participou = false;
+
+	medalha = fopen(caminho, "r");	
+	atleta = fopen(caminho1, "r");	
+	pais = fopen(caminho2, "r");	
+	modalidade = fopen(caminho3, "r");	
+	evento = fopen(caminho4, "r");	
+	
+	idMed = ultimo_id(caminho, "medalha");
+	idAt = ultimo_id(caminho1, "atleta");
+	idMod = ultimo_id(caminho3, "modalidade");
+	idEv = ultimo_id(caminho4, "evento");
+	idPa = ultimo_id(caminho2, "pais");
+	
+	Atleta atlet;
+	Atleta atletas[idAt];
+	Medalhas medalhas;
+	Modalidades modalid;
+	Modalidades modalidades[idMod];
+	Evento event;
+	Evento eventos[idEv];
+	Paises pai;
+	Paises paises[idPa];
+	
+	
+	if(medalha != NULL && evento != NULL && pais != NULL && modalidade != NULL && pais != NULL  && atleta != NULL )
+	{
+		
+		if(get_size(caminho) > 0 && get_size(caminho1) > 0 && get_size(caminho2) > 0 && get_size(caminho3) > 0 && get_size(caminho4) > 0) 
+		{
+			
+			i = 0;		
+			while(!feof(atleta))
+			{
+				fread(&atlet, sizeof(Atleta),1,atleta);
+				atletas[i] = atlet;
+				i++;		
+			}
+			
+			while(!feof(medalha))
+			{
+				fread(&medalhas, sizeof(Medalhas),1,medalha);
+			}
+			
+			fclose(medalha);
+			
+			i = 0;		
+			while(!feof(pais))
+			{
+				fread(&pai, sizeof(Paises),1, pais);
+				paises[i] = pai;
+				i++;		
+			}
+			
+			fclose(pais);
+			
+			i = 0;		
+			while(!feof(modalidade))
+			{
+				fread(&modalid, sizeof(Modalidades),1,modalidade);
+				modalidades[i] = modalid;
+				i++;		
+			}
+			
+			fclose(modalidade);
+			
+			i = 0;		
+			while(!feof(evento))
+			{
+				fread(&event, sizeof(Evento),1,evento);
+				eventos[i] = event;
+				i++;		
+			}
+			
+			fclose(evento);
+			
+			
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   GESTAO OLIMPIADAS \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
+		
+		
+		
+		
+		printf("Escolha uma das opções:\n");
+		printf(" [1] Atribuir medalhas a atleta\n [2] Resultados \n [3] voltar\n\n");
+		scanf("%d", &opcao);
+		
+			switch(opcao)
+			{
+				case 1:
+					
+					
+					
+					printf("Insira o id do atleta.\n");
+					scanf("%d", &id);
+					
+					
+					if(id > 0 && id <= idAt)
+					{
+						printf("Deseja alterar as medalhas id %d do atleta %s. ?\nDigite 1 para SIM ou 0 para NÃO.\n", id, atletas[id-1].nome);
+						scanf("%d", &confirma);
+						
+						if(confirma == 1)
+						{
+							j = 0;
+							while(j < idEv)
+							{
+								
+								for(i = 0; i < idPa;i++)
+								{
+									if(strcmp(atletas[id-1].pais, eventos[j].pais[i].nomes) == 0 && strcmp(atletas[id-1].modalidade, eventos[j].modalidade.modalidades) == 0)
+									{
+										participou = true;
+										break;
+									}
+											
+								}
+														
+								j++;
+							}
+							
+							if(participou)
+							{
+								printf("Qual medalha o atleta irá receber ?\n");
+								printf(" [1] Ouro \n [2] Prata \n [3] Bronze\n");
+								scanf("%d", &medalhaRecebida);
+								
+								if(medalhaRecebida > 0 && medalhaRecebida < 4)
+								{
+									if(medalhaRecebida == 1)
+									{
+										int medalhaouroAnt = atletas[id-1].medalhas.ouro;
+										int medalhaprataAnt = atletas[id-1].medalhas.prata;
+										int medalhabronzeAnt = atletas[id-1].medalhas.bronze;
+										int medalhatotalAnt = atletas[id-1].medalhas.total;
+										
+										atlet.idNUm = id;
+										strcpy(atlet.nome , atletas[id-1].nome);
+										strcpy(atlet.sobrenome , atletas[id-1].sobrenome);
+										strcpy(atlet.pais , atletas[id-1].pais);
+										strcpy(atlet.modalidade , atletas[id-1].modalidade);
+										atlet.medalhas.ouro = medalhaouroAnt+1;
+										atlet.medalhas.ouro = medalhaprataAnt;
+										atlet.medalhas.ouro = medalhabronzeAnt;
+										atlet.medalhas.total = atletas[id-1].medalhas.ouro + atletas[id-1].medalhas.prata + atletas[id-1].medalhas.bronze;
+										
+										//atleta = fopen(caminho1, "a+");
+										
+										if(id == 1)
+										{
+											//fseek(atleta, 1*sizeof(Atleta),SEEK_CUR);
+											rewind(atleta);
+											fwrite(&atlet, sizeof(Atleta),1,atleta);
+											fclose(atleta);
+											printf("Dados salvos com sucesso!!\n\n");
+											sleep(2);
+											menuprincipal();
+										}
+										else
+										{
+										 	fseek(atleta,(id-1)*sizeof(Atleta),SEEK_CUR);
+										 	fwrite(&atlet, sizeof(Atleta),1,atleta);
+											fclose(atleta);
+											printf("Dados salvos com sucesso!!\n\n");
+											sleep(2);
+											menuprincipal();
+										}
+										
+									
+										
+																			
+									}
+								}
+							}
+							
+						}
+						else
+						{
+							sleep(2);
+							menuprincipal();
+						}
+					}
+					else
+					{
+						printf("Id invalido!\n");
+						sleep(2);
+						menuprincipal();
+					}
+					
+					
+					break;
+					
+				case 2:
+				
+					break;
+				
+				case 3:
+					sleep(2);
+					menuprincipal();
+					break;
+					
+				default:
+					printf("Opção invalida!!\n");
+					sleep(2);
+					menuprincipal();			
+			}	
+			
+		}
+		else
+		{
+			printf("Nenhum evento, atleta, modalidade, pais ou medalha cadastrados.\n");
+			sleep(2);
+			menuprincipal();
+		}
+		
+		
+				
+		
+	}
+	else
+	{
+		printf("Nenhum evento, atleta, modalidade, pais ou medalha cadastrados.\n");
+		sleep(2);
+		menuprincipal();
+	}
 }
 
 void cadastroAtletas(){
@@ -3876,6 +4150,8 @@ void eventos(){
 
 void medalhasOlimpicas()
 {
+	system("cls");
+	
 	FILE *medalha;
 	char caminho[] = "C:/Gestao Olimpiada/medalhas.txt";
 	int opcao, alterar, quant, ouro, prata, bronze, ver, confirma;
@@ -3887,6 +4163,7 @@ void medalhasOlimpicas()
 	Medalhas alterarQuant;
 	
 	memset(&medalhas,0,sizeof(Medalhas));
+	memset(&alterarQuant,0,sizeof(Medalhas));
 	
 	if(medalha != NULL)
 	{
@@ -3911,7 +4188,7 @@ void medalhasOlimpicas()
 				printf("[1] %d de Ouro \n", medal.ouro);
 				printf("[2] %d de Prata \n", medal.prata);
 				printf("[3] %d de bronze \n", medal.bronze);
-				printf(" %d total de medalhas \n\n", medal.total);
+				printf("    %d total de medalhas \n\n", medal.total);
 				
 				printf("Escolha uma opção.\n");
 				scanf("%d", &opcao);
@@ -4156,6 +4433,8 @@ void  consultarPessoasCad(int op){
 
 void consultaResumoatleta()
 {
+	system("cls");
+	
 	FILE *atletas;
 	char caminho[] = "C:/Gestao olimpiada/atletas.txt";
 	int id, contador=0;
@@ -4234,6 +4513,8 @@ void consultaResumoatleta()
 
 void consultaAtletas()
 {
+	system("cls");
+	
 	FILE *atletas;
 	
 	char caminho[] = "C:/Gestao Olimpiada/atletas.txt";
@@ -4311,6 +4592,7 @@ void consultaAtletas()
 
 void consultaFuncionarios(){
 	
+	system("cls");
 	FILE *funcionarios;
 	
 	char caminho[] = "C:/Gestao Olimpiada/funcionarios.txt";
@@ -4381,6 +4663,9 @@ void consultaFuncionarios(){
 }
 
 void consultaMedicos(){
+	
+	system("cls");
+	
 	FILE *medicos;
 	
 	char caminho[] = "C:/Gestao Olimpiada/medicos.txt";
@@ -4450,6 +4735,9 @@ void consultaMedicos(){
 }
 
 void consultaVoluntarios(){
+	
+	system("cls");
+	
 	FILE *voluntarios;
 	
 	char caminho[] = "C:/Gestao Olimpiada/volumtarios.txt";
@@ -4523,6 +4811,8 @@ void consultaVoluntarios(){
 
 void consultaEquip(){
 	
+	system("cls");
+	
 	FILE *equipes;
 	
 	char caminho[] = "C:/Gestao Olimpiada/equipes.txt";
@@ -4593,6 +4883,8 @@ void consultaEquip(){
 
 
 void consultaPaises(){
+	
+	system("cls");
 	
 	FILE *paises;
 	
@@ -4675,6 +4967,8 @@ void consultaPaises(){
 }
 
 void consultaModalidades(){
+	
+	system("cls");
 	FILE *modalidade;
 	
 	char caminho[] = "C:/Gestao Olimpiada/modalidades.txt";
@@ -4748,6 +5042,9 @@ void consultaModalidades(){
 }
 
 void consultaAlojamentos(){
+	
+	system("cls");
+	
 	FILE *alojamentos;
 	
 	char caminho[] = "C:/Gestao Olimpiada/alojamentos.txt";
@@ -4849,6 +5146,9 @@ void consultaAlojamentos(){
 }
 
 void consultaLocaisJogos(){
+	
+	system("cls");
+	
 	FILE *local;
 	
 	char caminho[] = "C:/Gestao Olimpiada/locaisjogos.txt";
@@ -4917,6 +5217,9 @@ void consultaLocaisJogos(){
 }
 
 void consultaEquipamentos(){
+	
+	system("cls");
+	
 	FILE *equipamentos;
 	
 	char caminho[] = "C:/Gestao Olimpiada/equipamentos.txt";
@@ -4982,6 +5285,9 @@ void consultaEquipamentos(){
 }
 
 void consultaCentroTreinamento(){
+	
+	system("cls");
+	
 	FILE *centros;
 	
 	char caminho[] = "C:/Gestao Olimpiada/centrotreinamento.txt";
@@ -5081,6 +5387,8 @@ void consultaCentroTreinamento(){
 
 void consultaNumerosdeCadastros()
 {
+	system("cls");
+	
 	int id;
    
    char caminho[] = "C:/Gestao Olimpiada/paises.txt";
