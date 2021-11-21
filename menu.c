@@ -208,6 +208,12 @@ void consultaEquip();
 //Função para consulta de resumo por atleta
 void consultaResumoatleta();
 
+//Mostra o total de medalhas por categorias e modalidades
+void consultatotalmedalhasporcat();
+
+//Mostra quantas medalhas foram distribuidas
+void consultamedalhasdistribuidas();
+
 //Função menu que chama as opções de consulta
 void consultarPessoasCad(int);
 
@@ -746,13 +752,13 @@ void menus(int opcao){
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   RELATORIOS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Calendario olimpico \n [2] Ranking dos países \n [3] Resumo por atleta \n [4] Total de medalhas por categoria \n [5] Consulta cadastros \n [6] Voltar\n\n");
+						printf(" [1] Calendario olimpico \n [2] Ranking dos países \n [3] Resumo por atleta \n [4] Total de medalhas por categoria \n [5] Medalhas distribuidas \n [6] Consulta cadastros \n [7] Voltar\n\n");
 						printf("Escolha uma opção:\n");
 						scanf("%d", &relatorios);
 						
-						if(relatorios > 0 && relatorios < 6)
+						if(relatorios > 0 && relatorios < 7)
 							menuRelatorios(relatorios);
-						else if(relatorios == 6)
+						else if(relatorios == 7)
 							menuprincipal();
 						else
 						{
@@ -796,12 +802,14 @@ void menuRelatorios(int opcao){
 			break;	
 			
 		case 4:
-			printf("Relatórios.\n");
-			sleep(3);
-			menuprincipal();
+			consultatotalmedalhasporcat();
+			break;
+			
+		case 5:
+			consultamedalhasdistribuidas();
 			break;
 				
-		case 5:
+		case 6:
 			system("cls");
 			printf("---------------------------------------------------------------------------------------------\n");
 			printf("                                   CONSULTAS DE CADASTROS \n");
@@ -1029,13 +1037,15 @@ void gestao()
 {
 	system("cls");
 	
-	FILE *medalha;
+	FILE *medalha, *medDist, *med;
 	FILE *atleta, *at;
 	FILE *pais, *p;
 	FILE *modalidade, *modal ;
 	FILE *evento;
 	
 	char caminho[] = "C:/Gestao Olimpiada/medalhas.txt";
+	char caminhomed[] = "C:/Gestao Olimpiada/medalhasdistribuidas.txt";
+	char caminhomedist[] = "C:/Gestao Olimpiada/medalhasdist.txt";
 	char caminho1[] = "C:/Gestao Olimpiada/atletas.txt";
 	char caminhoat[] = "C:/Gestao Olimpiada/atleta.txt";
 	char caminho2[] = "C:/Gestao Olimpiada/paises.txt";
@@ -1048,6 +1058,8 @@ void gestao()
 	bool paisparticipou = false, modparticipou = false, encontrou = false;
 
 	medalha = fopen(caminho, "r");	
+	medDist = fopen(caminhomed, "a");	
+	med = fopen(caminhomedist, "w");	
 	atleta = fopen(caminho1, "r");
 	at = fopen(caminhoat, "w");
 	pais = fopen(caminho2, "r");	
@@ -1065,6 +1077,7 @@ void gestao()
 	Atleta atlet;
 	Atleta atletas[200];
 	Medalhas medalhas;
+	Medalhas medalhasdist;
 	Modalidades modalid;
 	Modalidades modalidades[100];
 	Evento event;
@@ -1075,6 +1088,19 @@ void gestao()
 	memset(&atlet, 0, sizeof(Atleta));
 	memset(&pai, 0, sizeof(Paises));
 	memset(&modalid, 0, sizeof(Modalidades));
+	memset(&medalhasdist, 0, sizeof(Medalhas));
+	
+	if(get_size(caminhomed) == 0)
+		{
+			    medalhasdist.id = 1;
+				medalhasdist.ouro = 0;	
+				medalhasdist.prata = 0;	
+				medalhasdist.bronze = 0;	
+				medalhasdist.total = 0;	
+		
+				fwrite(&medalhasdist, sizeof(Medalhas),1, medDist);
+				fclose(medDist);
+		}
 	
 		if(get_size(caminho) > 0 && get_size(caminho1) > 0 && get_size(caminho2) > 0 && get_size(caminho3) > 0 && get_size(caminho4) > 0) 
 		{
@@ -1126,6 +1152,8 @@ void gestao()
 			
 			fclose(evento);
 			
+			
+			
 		}
 		else
 		{
@@ -1135,11 +1163,11 @@ void gestao()
 		}
 	
 	
-	if(medalha != NULL && evento != NULL && pais != NULL && modalidade != NULL  && atleta != NULL )
-	{
 		
 	
-			
+	
+	if(medalha != NULL && evento != NULL && pais != NULL && modalidade != NULL  && atleta != NULL )
+	{
 		
 		printf("---------------------------------------------------------------------------------------------\n");
 		printf("                                   GESTAO OLIMPIADAS \n");
@@ -1263,6 +1291,14 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
+												    medalhasdist.id = 1;
+													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
+													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
+													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
+													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+													
+													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+													
 													fwrite(&atlet, sizeof(Atleta),1,at);
 													
 													int pa = 0;
@@ -1336,6 +1372,14 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
+													medalhasdist.id = 1;
+													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
+													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
+													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
+													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+													
+													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+													
 													fwrite(&atlet,sizeof(Atleta),1,at);
 												}
 												
@@ -1349,6 +1393,7 @@ void gestao()
 											fclose(at);
 											fclose(p);
 											fclose(modal);
+											fclose(med);
 										
 											
 											if(encontrou)
@@ -1361,6 +1406,9 @@ void gestao()
 												
 												modal = fopen(caminhomod, "r");
 												modalidade = fopen(caminho3, "w");
+												
+												med = fopen(caminhomedist, "r");
+												medDist = fopen(caminhomed, "w");
 												
 												while(fread(&atlet, sizeof(Atleta),1,at))
 												{
@@ -1377,6 +1425,11 @@ void gestao()
 													fwrite(&modalid, sizeof(Modalidades),1,modalidade);
 												}
 												
+												while(fread(&medalhasdist, sizeof(Medalhas),1,med))
+												{
+													fwrite(&medalhasdist, sizeof(Medalhas),1,medDist);
+												}
+												
 												printf("Dados salvos com sucesso!!\n\n");
 												
 												fclose(at);
@@ -1388,6 +1441,9 @@ void gestao()
 												fclose(modal);
 												fclose(modalidade);
 												remove(caminhomod);
+												fclose(medDist);
+												fclose(med);
+												remove(caminhomedist);
 											}
 											
 											
@@ -1416,6 +1472,15 @@ void gestao()
 													atlet.medalhas.prata = atletas[i].medalhas.prata+1;
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
+													
+											    	medalhasdist.id = 1;
+													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
+													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
+													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
+													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+													
+													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+													
 													
 													fwrite(&atlet, sizeof(Atleta),1,at);
 													
@@ -1492,6 +1557,33 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
+													pai.idNUm = paises[i].idNUm;
+													strcpy(pai.nomes, paises[i].nomes);
+													pai.medalhas.ouro = paises[i].medalhas.ouro;
+													pai.medalhas.prata = paises[i].medalhas.prata;
+													pai.medalhas.bronze = paises[i].medalhas.bronze;
+													pai.medalhas.total = pai.medalhas.ouro + pai.medalhas.prata + pai.medalhas.bronze;
+													
+													fwrite(&pai, sizeof(Paises),1,p);
+													
+													
+													modalid.idNUm = modalidades[i].idNUm;
+													strcpy(modalid.modalidades, modalidades[i].modalidades);
+													modalid.medalhas.ouro = modalidades[i].medalhas.ouro;
+													modalid.medalhas.prata = modalidades[i].medalhas.prata;
+													modalid.medalhas.bronze = modalidades[i].medalhas.bronze;
+													modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+													
+													fwrite(&modalid, sizeof(Modalidades),1,modal);
+													
+											    	medalhasdist.id = 1;
+													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
+													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
+													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
+													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+													
+													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+													
 													fwrite(&atlet,sizeof(Atleta),1,at);
 												}
 												
@@ -1503,10 +1595,11 @@ void gestao()
 											fclose(at);
 											fclose(p);
 											fclose(modal);
+											fclose(med);
 											
 											if(encontrou)
 											{
-												at = fopen(caminhoat, "r");
+											at = fopen(caminhoat, "r");
 												atleta = fopen(caminho1, "w");
 										
 												p = fopen(caminhopa, "r");
@@ -1514,6 +1607,9 @@ void gestao()
 												
 												modal = fopen(caminhomod, "r");
 												modalidade = fopen(caminho3, "w");
+												
+												med = fopen(caminhomedist, "r");
+												medDist = fopen(caminhomed, "w");
 												
 												while(fread(&atlet, sizeof(Atleta),1,at))
 												{
@@ -1530,6 +1626,11 @@ void gestao()
 													fwrite(&modalid, sizeof(Modalidades),1,modalidade);
 												}
 												
+												while(fread(&medalhasdist, sizeof(Medalhas),1,med))
+												{
+													fwrite(&medalhasdist, sizeof(Medalhas),1,medDist);
+												}
+												
 												printf("Dados salvos com sucesso!!\n\n");
 												
 												fclose(at);
@@ -1541,6 +1642,9 @@ void gestao()
 												fclose(modal);
 												fclose(modalidade);
 												remove(caminhomod);
+												fclose(medDist);
+												fclose(med);
+												remove(caminhomedist);
 											}
 											
 											sleep(2);
@@ -1566,6 +1670,15 @@ void gestao()
 													atlet.medalhas.prata = atletas[i].medalhas.prata;
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze+1;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
+													
+												    medalhasdist.id = 1;
+													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
+													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
+													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
+													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+													
+													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+													
 													
 													fwrite(&atlet, sizeof(Atleta),1,at);
 													
@@ -1641,6 +1754,33 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
+													pai.idNUm = paises[i].idNUm;
+													strcpy(pai.nomes, paises[i].nomes);
+													pai.medalhas.ouro = paises[i].medalhas.ouro;
+													pai.medalhas.prata = paises[i].medalhas.prata;
+													pai.medalhas.bronze = paises[i].medalhas.bronze;
+													pai.medalhas.total = pai.medalhas.ouro + pai.medalhas.prata + pai.medalhas.bronze;
+													
+													fwrite(&pai, sizeof(Paises),1,p);
+													
+													
+													modalid.idNUm = modalidades[i].idNUm;
+													strcpy(modalid.modalidades, modalidades[i].modalidades);
+													modalid.medalhas.ouro = modalidades[i].medalhas.ouro;
+													modalid.medalhas.prata = modalidades[i].medalhas.prata;
+													modalid.medalhas.bronze = modalidades[i].medalhas.bronze;
+													modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+													
+													fwrite(&modalid, sizeof(Modalidades),1,modal);
+													
+													medalhasdist.id = 1;
+													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
+													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
+													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
+													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+													
+													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+													
 													fwrite(&atlet,sizeof(Atleta),1,at);
 												}
 												
@@ -1653,6 +1793,7 @@ void gestao()
 											fclose(p);
 											fclose(at);
 											fclose(modal);
+											fclose(med);
 											
 											if(encontrou)
 											{
@@ -1664,6 +1805,9 @@ void gestao()
 												
 												modal = fopen(caminhomod, "r");
 												modalidade = fopen(caminho3, "w");
+												
+												med = fopen(caminhomedist, "r");
+												medDist = fopen(caminhomed, "w");
 												
 												while(fread(&atlet, sizeof(Atleta),1,at))
 												{
@@ -1680,6 +1824,11 @@ void gestao()
 													fwrite(&modalid, sizeof(Modalidades),1,modalidade);
 												}
 												
+												while(fread(&medalhasdist, sizeof(Medalhas),1,med))
+												{
+													fwrite(&medalhasdist, sizeof(Medalhas),1,medDist);
+												}
+												
 												printf("Dados salvos com sucesso!!\n\n");
 												
 												fclose(at);
@@ -1691,6 +1840,9 @@ void gestao()
 												fclose(modal);
 												fclose(modalidade);
 												remove(caminhomod);
+												fclose(medDist);
+												fclose(med);
+												remove(caminhomedist);
 												
 												
 											}
@@ -3182,7 +3334,7 @@ void alojamentos(){
 	Alojamentos alojCadastrado[100];
 	
 
-	memset(alojamento, 0, (size_t)quant * sizeof(alojamento));
+	memset(alojamento, 0, sizeof(Alojamentos));
 	
 	
 		if(get_size(pais)==0)
@@ -3779,7 +3931,7 @@ void centroTreinamento(){
 	CentroTreinamento centro[quant];
 	CentroTreinamento centroCad[100];
 
-	memset(centro, 0, (size_t)quant * sizeof(centro));
+	memset(centro, 0, sizeof(CentroTreinamento));
 	
 	
 		if(get_size(pais)==0)
@@ -5039,6 +5191,115 @@ void consultaResumoatleta()
 	}
 	
 	
+}
+
+void consultatotalmedalhasporcat()
+{
+	system("cls");
+	
+	FILE *modalidade;
+	
+	char caminho[] = "C:/Gestao Olimpiada/modalidades.txt"; 
+	int id, i=0;
+	
+	Modalidades mods;
+	Modalidades modalidades[100]; 
+	
+	id = ultimo_id(caminho, "modalidade");
+	
+	modalidade = fopen(caminho, "r");
+	
+	if(modalidade != NULL && get_size(caminho) > 0)
+	{
+		while(!feof(modalidade))
+		{
+			fread(&mods, sizeof(Modalidades),1,modalidade);
+			modalidades[i] = mods;
+			i++;
+		}
+		
+		fclose(modalidade);
+		
+		i = 0;
+		
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   MEDALHAS POR CATEGORIA \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
+		
+		while(i < id)
+		{
+			printf("Modalidade: %s\n", modalidades[i].modalidades);
+			printf("Medalhas de ouro: %d\n", modalidades[i].medalhas.ouro);
+			printf("Medalhas de prata: %d\n", modalidades[i].medalhas.prata);
+			printf("Medalhas de bronze: %d\n", modalidades[i].medalhas.bronze);
+			printf("Total de medalhas: %d\n\n", modalidades[i].medalhas.total);
+			i++;
+		}
+		
+		system("pause");
+		sleep(2);
+		menuprincipal();
+		
+	}
+	else
+	{
+		printf("Nenhuma modalidade cadastrada!\n");
+		sleep(2);
+		menuprincipal();
+	}
+	
+}
+
+void consultamedalhasdistribuidas()
+{
+	system("cls");
+	
+	FILE *medalhasdist;
+	
+	char caminho[] = "C:/Gestao Olimpiada/medalhasdistribuidas.txt";
+	
+	Medalhas medalhas;
+	
+	medalhasdist = fopen(caminho, "r");
+	
+	if(get_size(caminho) > 0)
+	{
+		while(!feof(medalhasdist))
+		{
+			fread(&medalhas, sizeof(Medalhas),1,medalhasdist);
+		}
+		fclose(medalhasdist);
+	}
+	else
+	{
+		printf("Nenhuma medalha distribuida.\n");
+		sleep(2);
+		menuprincipal();
+	}
+	
+	if(medalhasdist != NULL)
+	{
+				printf("---------------------------------------------------------------------------------------------\n");
+				printf("                                   MEDALHAS DISTRIBUIDAS \n");
+				printf("---------------------------------------------------------------------------------------------\n\n");
+				
+			
+					printf("Medalhas de ouro: %d\n", medalhas.ouro);
+					printf("Medalhas de prata: %d\n", medalhas.prata);
+					printf("Medalhas de bronze: %d\n", medalhas.bronze);
+					printf("Medalhas de total: %d\n\n", medalhas.total);
+			
+				
+				system("pause");
+				sleep(2);
+				menuprincipal();
+	}
+	else
+	{
+		printf("Nenhuma medalha distribuida.\n");
+		sleep(2);
+		menuprincipal();
+	}
 }
 
 void consultaAtletas()
