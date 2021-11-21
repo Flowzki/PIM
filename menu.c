@@ -205,6 +205,9 @@ void consultaVoluntarios();
 //Função para consultar cadastro de atletas
 void consultaEquip();
 
+//Mostra o ranking dos paises
+void rankingpaises();
+
 //Função para consulta de resumo por atleta
 void consultaResumoatleta();
 
@@ -792,9 +795,7 @@ void menuRelatorios(int opcao){
 			calendario();
 			break;
 		case 2:
-			printf("Relatórios.\n");
-			sleep(3);
-			menuprincipal();
+			rankingpaises();
 			break;
 			
 		case 3:
@@ -1176,7 +1177,7 @@ void gestao()
 		
 		
 		printf("Escolha uma das opções:\n\n");
-		printf(" [1] Atribuir medalhas a atleta\n [2] Resultados \n [3] voltar\n\n");
+		printf(" [1] Atribuir medalhas a atleta \n [2] voltar\n\n");
 		printf("Insira a opção desejada.\n");
 		scanf("%d", &opcao);
 		
@@ -1889,13 +1890,8 @@ void gestao()
 					}
 					
 					
-					break;
-					
+					break;	
 				case 2:
-				
-					break;
-				
-				case 3:
 					sleep(2);
 					menuprincipal();
 					break;
@@ -5110,6 +5106,82 @@ void  consultarPessoasCad(int op){
 			menuprincipal();
 		
 	}
+	
+}
+
+void rankingpaises()
+{
+	FILE *pais;
+	
+	char caminho[] = "C:/Gestao Olimpiada/paises.txt";
+	const char *nomes[] = {"POS","PAIS", "OURO", "PRATA", "BRONZE", "TOTAL"};
+	
+	int id, i=0,j=0;
+	
+	pais = fopen(caminho, "r");
+	
+	id = ultimo_id(caminho, "pais");
+	
+	Paises paises[id], pai;
+	
+	if(get_size(caminho) > 0)
+	{
+		while(!feof(pais))
+		{
+			fread(&pai, sizeof(Paises),1,pais);
+			paises[i] = pai;
+			i++;
+		}
+		fclose(pais);
+	}
+	else
+	{
+		printf("Nenhum pais cadastrado!!\n");
+		sleep(2);
+		menuprincipal();
+	}
+	
+	if(pais != NULL)
+	{
+		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   RANKING PAISES \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+		
+		for(i=0;i<id;i++)
+		{
+			for(j=i+1;j<id;j++)
+			{
+				if(paises[i].medalhas.total < paises[j].medalhas.total)
+				{
+					pai = paises[i];
+					paises[i] = paises[j];
+					paises[j] = pai;
+				}
+			}
+		}
+		
+		
+		printf("--| %-3s |--| %-10s |----|  %-2s |----|  %-2s |----|  %-2s |----|  %-2s | \n", nomes[0], nomes[1], nomes[2], nomes[3], nomes[4], nomes[5]);
+		
+		i = 0;
+		for(i=0;i<id;i++)
+		{
+			printf("--| %-3d |--| %-10s |----|  %-4d |----|   %-4d |----|    %-4d |----|  %-4d  |\n", i+1, paises[i].nomes, paises[i].medalhas.ouro, paises[i].medalhas.prata, paises[i].medalhas.bronze, paises[i].medalhas.total);
+		}
+		
+		printf("\n");
+		system("pause");
+		sleep(2);
+		menuprincipal();
+	}
+	else
+	{
+		printf("Nenhum pais cadastrado!!\n");
+		sleep(2);
+		menuprincipal();
+	}
+	
 	
 }
 
