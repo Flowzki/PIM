@@ -1057,6 +1057,7 @@ void gestao()
 
 	int idMed, idAt, idPa, idMod, idEv, j, i, opcao, id, confirma, medalhaRecebida, even;
 	bool paisparticipou = false, modparticipou = false, encontrou = false;
+	
 
 	medalha = fopen(caminho, "r");	
 	medDist = fopen(caminhomed, "a");	
@@ -1076,20 +1077,25 @@ void gestao()
 	idPa = ultimo_id(caminho2, "pais");
 	
 	Atleta atlet;
-	Atleta atletas[200];
 	Medalhas medalhas;
 	Medalhas medalhasdist;
 	Modalidades modalid;
-	Modalidades modalidades[100];
 	Evento event;
-	Evento eventos[100];
 	Paises pai;
+	Modalidades modalidades[50];
+	Atleta atletas[100];
+	Evento eventos[50];
 	Paises paises[100];
 	
 	memset(&atlet, 0, sizeof(Atleta));
 	memset(&pai, 0, sizeof(Paises));
 	memset(&modalid, 0, sizeof(Modalidades));
 	memset(&medalhasdist, 0, sizeof(Medalhas));
+	memset(paises, 0, idPa*sizeof(Paises));
+	memset(eventos, 0, idEv*sizeof(Evento));
+	memset(atletas, 0, idAt*sizeof(Atleta));
+	memset(modalidades, 0, idMod*sizeof(Modalidades));
+
 	
 	if(get_size(caminhomed) == 0)
 		{
@@ -1105,6 +1111,8 @@ void gestao()
 	
 		if(get_size(caminho) > 0 && get_size(caminho1) > 0 && get_size(caminho2) > 0 && get_size(caminho3) > 0 && get_size(caminho4) > 0) 
 		{
+			
+			
 			
 			i = 0;		
 			while(!feof(atleta))
@@ -1892,6 +1900,9 @@ void gestao()
 					
 					break;	
 				case 2:
+					
+				
+					
 					sleep(2);
 					menuprincipal();
 					break;
