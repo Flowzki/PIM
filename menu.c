@@ -1023,7 +1023,7 @@ void controlescovid(){
 	printf(" 4. Uso de mácaras obrigario para todos.\n");
 	printf(" 5. Aferição de temperatura antes da entrada.\n");
 	printf(" 6. Caso seja constatado algum sintoma a pessoa será encaminhada para testes e posteriomente o isolamento.\n");
-	printf(" 7. Caso apresentar casos positivos os eventos/disputas serão adiados.\n");
+	printf(" 7. Caso apresentar testes positivos os eventos/disputas serão adiados.\n");
 	printf(" 8. Todos os participantes, funcionarios, organizadores, etc. Irão realizar testes a cada 15 dias.\n");
 	printf(" 9. Em caso de dúvidas ligar para a central, ou avisar o seu superior para tomar as medidas necessárias.\n\n");
 	
@@ -1086,15 +1086,12 @@ void gestao()
 	Atleta atletas[100];
 	Evento eventos[50];
 	Paises paises[100];
-	
+
 	memset(&atlet, 0, sizeof(Atleta));
 	memset(&pai, 0, sizeof(Paises));
 	memset(&modalid, 0, sizeof(Modalidades));
 	memset(&medalhasdist, 0, sizeof(Medalhas));
-	memset(paises, 0, idPa*sizeof(Paises));
-	memset(eventos, 0, idEv*sizeof(Evento));
-	memset(atletas, 0, idAt*sizeof(Atleta));
-	memset(modalidades, 0, idMod*sizeof(Modalidades));
+	
 
 	
 	if(get_size(caminhomed) == 0)
