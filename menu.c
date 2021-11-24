@@ -1054,13 +1054,16 @@ void gestao()
 	char caminho3[] = "C:/Gestao Olimpiada/modalidades.txt";
 	char caminhomod[] = "C:/Gestao Olimpiada/modalidade.txt";
 	char caminho4[] = "C:/Gestao Olimpiada/eventos.txt";
+	
+	char ppais[20]; 
+	char mmod[20]; 
 
 	int idMed, idAt, idPa, idMod, idEv, j, i, opcao, id, confirma, medalhaRecebida, even;
 	bool paisparticipou = false, modparticipou = false, encontrou = false;
 	
 
 	medalha = fopen(caminho, "r");	
-	medDist = fopen(caminhomed, "a");	
+	medDist = fopen(caminhomed, "a+");	
 	med = fopen(caminhomedist, "w");	
 	atleta = fopen(caminho1, "r");
 	at = fopen(caminhoat, "w");
@@ -1079,6 +1082,7 @@ void gestao()
 	Atleta atlet;
 	Medalhas medalhas;
 	Medalhas medalhasdist;
+	Medalhas medalhasdi;
 	Modalidades modalid;
 	Evento event;
 	Paises pai;
@@ -1093,9 +1097,16 @@ void gestao()
 	memset(&medalhasdist, 0, sizeof(Medalhas));
 	
 
+
 	
 	if(get_size(caminhomed) == 0)
 		{
+				medalhasdi.id = 1;
+				medalhasdi.ouro = 0;
+				medalhasdi.prata = 0;
+				medalhasdi.bronze = 0;
+				medalhasdi.total = 0;
+			
 			    medalhasdist.id = 1;
 				medalhasdist.ouro = 0;	
 				medalhasdist.prata = 0;	
@@ -1104,6 +1115,16 @@ void gestao()
 		
 				fwrite(&medalhasdist, sizeof(Medalhas),1, medDist);
 				fclose(medDist);
+				
+		}
+		else
+		{
+			while(!feof(medDist))
+			{
+				fread(&medalhasdi, sizeof(Medalhas),1,medDist);
+			}
+			
+			fclose(medDist);
 		}
 	
 		if(get_size(caminho) > 0 && get_size(caminho1) > 0 && get_size(caminho2) > 0 && get_size(caminho3) > 0 && get_size(caminho4) > 0) 
@@ -1204,6 +1225,13 @@ void gestao()
 					printf("Escolha o evento:\n");
 					scanf("%d", &even);
 					
+					if(even < 1 || even >  idEv)
+					{
+						printf("Opção invalida!!\n");
+						sleep(2);
+						menuprincipal();
+					}
+					
 					
 					printf("\nEscolha um dos atletas.\n\n");
 					
@@ -1279,6 +1307,15 @@ void gestao()
 									if(medalhaRecebida == 1)
 									{
 									
+											medalhasdist.id = 1;
+											medalhasdist.ouro = (medalhasdi.ouro - medalhas.ouro) + medalhas.ouro+1;
+											medalhasdist.prata = (medalhasdi.prata - medalhas.prata) + medalhas.prata;
+											medalhasdist.bronze = (medalhasdi.bronze - medalhas.bronze) + medalhas.bronze;
+											medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+										
+											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+											fclose(med);
+									
 										i = 0;
 										for(i = 0; i< idAt;i++){
 											
@@ -1297,21 +1334,40 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
-												    medalhasdist.id = 1;
-													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
-													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
-													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
-													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
-													
-													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+												    strcpy(ppais , atlet.pais);
+												    strcpy(mmod , atlet.modalidade); 
 													
 													fwrite(&atlet, sizeof(Atleta),1,at);
 													
-													int pa = 0;
+												
+														 
+													}
+													else
+													{
+													atlet.idNUm = atletas[i].idNUm;
+													strcpy(atlet.nome , atletas[i].nome);
+													strcpy(atlet.sobrenome , atletas[i].sobrenome);
+													strcpy(atlet.pais , atletas[i].pais);
+													strcpy(atlet.modalidade , atletas[i].modalidade);
+													atlet.medalhas.ouro = atletas[i].medalhas.ouro;
+													atlet.medalhas.prata = atletas[i].medalhas.prata;
+													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
+													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
+													
+												
+													
+													fwrite(&atlet,sizeof(Atleta),1,at);
+													}
+														
+												}
+														
+														int pa = 0;
 													
 													for(pa = 0; pa < idPa; pa++)
 													{
-														if(strcmp(atletas[i].pais, paises[pa].nomes)== 0)
+														
+															
+														if(strcmp(ppais, paises[pa].nomes) == 0)
 														{
 															pai.idNUm = paises[pa].idNUm;
 															strcpy(pai.nomes, paises[pa].nomes);
@@ -1333,73 +1389,46 @@ void gestao()
 															
 															fwrite(&pai, sizeof(Paises),1,p);
 														 } 
+															
 													 }
 														 
 														int moda  = 0;
 													
 														for(moda = 0; moda < idMod; moda++)
 														{
-															if(strcmp(atletas[i].modalidade, modalidades[moda].modalidades)== 0)
-															{
-																modalid.idNUm = modalidades[moda].idNUm;
-																strcpy(modalid.modalidades, modalidades[moda].modalidades);
-																modalid.medalhas.ouro = modalidades[moda].medalhas.ouro+1;
-																modalid.medalhas.prata = modalidades[moda].medalhas.prata;
-																modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
-																modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-																
-																fwrite(&modalid, sizeof(Modalidades),1,modal);
-															 }
-															 else
-															 {
-															 	modalid.idNUm = modalidades[moda].idNUm;
-																strcpy(modalid.modalidades, modalidades[moda].modalidades);
-																modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
-																modalid.medalhas.prata = modalidades[moda].medalhas.prata;
-																modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
-																modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-																
-																fwrite(&modalid, sizeof(Modalidades),1,modal);
-															 } 
-														 
-														}
-													
-												}
-												
-												else
-												{
-													atlet.idNUm = atletas[i].idNUm;
-													strcpy(atlet.nome , atletas[i].nome);
-													strcpy(atlet.sobrenome , atletas[i].sobrenome);
-													strcpy(atlet.pais , atletas[i].pais);
-													strcpy(atlet.modalidade , atletas[i].modalidade);
-													atlet.medalhas.ouro = atletas[i].medalhas.ouro;
-													atlet.medalhas.prata = atletas[i].medalhas.prata;
-													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
-													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
-													
-													medalhasdist.id = 1;
-													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
-													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
-													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
-													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
-													
-													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
-													
-													fwrite(&atlet,sizeof(Atleta),1,at);
-												}
+															
+																if(strcmp(mmod, modalidades[moda].modalidades)== 0)
+																{
+																	modalid.idNUm = modalidades[moda].idNUm;
+																	strcpy(modalid.modalidades, modalidades[moda].modalidades);
+																	modalid.medalhas.ouro = modalidades[moda].medalhas.ouro+1;
+																	modalid.medalhas.prata = modalidades[moda].medalhas.prata;
+																	modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
+																	modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+																	
+																	fwrite(&modalid, sizeof(Modalidades),1,modal);
+																 }
+																 else
+																 {
+																 	modalid.idNUm = modalidades[moda].idNUm;
+																	strcpy(modalid.modalidades, modalidades[moda].modalidades);
+																	modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
+																	modalid.medalhas.prata = modalidades[moda].medalhas.prata;
+																	modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
+																	modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+																	
+																	fwrite(&modalid, sizeof(Modalidades),1,modal);
+																 } 
+														
+															
+													}
 												
 												
-												
-										}
-											
-										
-											
 											
 											fclose(at);
 											fclose(p);
 											fclose(modal);
-											fclose(med);
+											
 										
 											
 											if(encontrou)
@@ -1460,9 +1489,19 @@ void gestao()
 									}
 									else if(medalhaRecebida == 2)
 									{
+										
+										
+											medalhasdist.id = 1;
+											medalhasdist.ouro = (medalhasdi.ouro - medalhas.ouro) + medalhas.ouro;
+											medalhasdist.prata = (medalhasdi.prata - medalhas.prata) + medalhas.prata+1;
+											medalhasdist.bronze = (medalhasdi.bronze - medalhas.bronze) + medalhas.bronze;
+											medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+										
+											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+											fclose(med);
+									
 										i = 0;
-										for(i = 0; i< idAt;i++)
-										{
+										for(i = 0; i< idAt;i++){
 											
 											
 											if(atletas[i].idNUm == id)
@@ -1479,23 +1518,40 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
-											    	medalhasdist.id = 1;
-													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
-													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
-													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
-													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
-													
-													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
-													
+												    strcpy(ppais , atlet.pais);
+												    strcpy(mmod , atlet.modalidade); 
 													
 													fwrite(&atlet, sizeof(Atleta),1,at);
 													
+												
+														 
+													}
+													else
+													{
+													atlet.idNUm = atletas[i].idNUm;
+													strcpy(atlet.nome , atletas[i].nome);
+													strcpy(atlet.sobrenome , atletas[i].sobrenome);
+													strcpy(atlet.pais , atletas[i].pais);
+													strcpy(atlet.modalidade , atletas[i].modalidade);
+													atlet.medalhas.ouro = atletas[i].medalhas.ouro;
+													atlet.medalhas.prata = atletas[i].medalhas.prata;
+													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
+													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
-													int pa = 0;
+												
+													
+													fwrite(&atlet,sizeof(Atleta),1,at);
+													}
+														
+												}
+														
+														int pa = 0;
 													
 													for(pa = 0; pa < idPa; pa++)
 													{
-														if(strcmp(atletas[i].pais, paises[pa].nomes)== 0)
+														
+															
+														if(strcmp(ppais, paises[pa].nomes) == 0)
 														{
 															pai.idNUm = paises[pa].idNUm;
 															strcpy(pai.nomes, paises[pa].nomes);
@@ -1517,85 +1573,39 @@ void gestao()
 															
 															fwrite(&pai, sizeof(Paises),1,p);
 														 } 
-												      }
-													
-													
+															
+													 }
+														 
 														int moda  = 0;
 													
 														for(moda = 0; moda < idMod; moda++)
 														{
-															if(strcmp(atletas[i].modalidade, modalidades[moda].modalidades)== 0)
-															{
-																modalid.idNUm = modalidades[moda].idNUm;
-																strcpy(modalid.modalidades, modalidades[moda].modalidades);
-																modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
-																modalid.medalhas.prata = modalidades[moda].medalhas.prata+1;
-																modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
-																modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-																
-																fwrite(&modalid, sizeof(Modalidades),1,modal);
-															 }
-															 else
-															 {
-															 	modalid.idNUm = modalidades[moda].idNUm;
-																strcpy(modalid.modalidades, modalidades[moda].modalidades);
-																modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
-																modalid.medalhas.prata = modalidades[moda].medalhas.prata;
-																modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
-																modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-																
-																fwrite(&modalid, sizeof(Modalidades),1,modal);
-															 } 
-														 
-														   }
-													
-												}
-												
-												else
-												{
-													atlet.idNUm = atletas[i].idNUm;
-													strcpy(atlet.nome , atletas[i].nome);
-													strcpy(atlet.sobrenome , atletas[i].sobrenome);
-													strcpy(atlet.pais , atletas[i].pais);
-													strcpy(atlet.modalidade , atletas[i].modalidade);
-													atlet.medalhas.ouro = atletas[i].medalhas.ouro;
-													atlet.medalhas.prata = atletas[i].medalhas.prata;
-													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
-													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
-													
-													pai.idNUm = paises[i].idNUm;
-													strcpy(pai.nomes, paises[i].nomes);
-													pai.medalhas.ouro = paises[i].medalhas.ouro;
-													pai.medalhas.prata = paises[i].medalhas.prata;
-													pai.medalhas.bronze = paises[i].medalhas.bronze;
-													pai.medalhas.total = pai.medalhas.ouro + pai.medalhas.prata + pai.medalhas.bronze;
-													
-													fwrite(&pai, sizeof(Paises),1,p);
-													
-													
-													modalid.idNUm = modalidades[i].idNUm;
-													strcpy(modalid.modalidades, modalidades[i].modalidades);
-													modalid.medalhas.ouro = modalidades[i].medalhas.ouro;
-													modalid.medalhas.prata = modalidades[i].medalhas.prata;
-													modalid.medalhas.bronze = modalidades[i].medalhas.bronze;
-													modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-													
-													fwrite(&modalid, sizeof(Modalidades),1,modal);
-													
-											    	medalhasdist.id = 1;
-													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
-													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
-													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
-													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
-													
-													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
-													
-													fwrite(&atlet,sizeof(Atleta),1,at);
-												}
-												
-												
-												
-											}
+															
+																if(strcmp(mmod, modalidades[moda].modalidades)== 0)
+																{
+																	modalid.idNUm = modalidades[moda].idNUm;
+																	strcpy(modalid.modalidades, modalidades[moda].modalidades);
+																	modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
+																	modalid.medalhas.prata = modalidades[moda].medalhas.prata+1;
+																	modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
+																	modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+																	
+																	fwrite(&modalid, sizeof(Modalidades),1,modal);
+																 }
+																 else
+																 {
+																 	modalid.idNUm = modalidades[moda].idNUm;
+																	strcpy(modalid.modalidades, modalidades[moda].modalidades);
+																	modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
+																	modalid.medalhas.prata = modalidades[moda].medalhas.prata;
+																	modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
+																	modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+																	
+																	fwrite(&modalid, sizeof(Modalidades),1,modal);
+																 } 
+														
+															
+													}
 											
 											
 											fclose(at);
@@ -1605,7 +1615,7 @@ void gestao()
 											
 											if(encontrou)
 											{
-											at = fopen(caminhoat, "r");
+												at = fopen(caminhoat, "r");
 												atleta = fopen(caminho1, "w");
 										
 												p = fopen(caminhopa, "r");
@@ -1658,9 +1668,18 @@ void gestao()
 									}
 									else if(medalhaRecebida == 3)
 									{
+										
+											medalhasdist.id = 1;
+											medalhasdist.ouro = (medalhasdi.ouro - medalhas.ouro) + medalhas.ouro;
+											medalhasdist.prata = (medalhasdi.prata - medalhas.prata) + medalhas.prata;
+											medalhasdist.bronze = (medalhasdi.bronze - medalhas.bronze) + medalhas.bronze+1;
+											medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
+										
+											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
+											fclose(med);
+									
 										i = 0;
-										for(i = 0; i< idAt;i++)
-										{
+										for(i = 0; i< idAt;i++){
 											
 											
 											if(atletas[i].idNUm == id)
@@ -1677,23 +1696,40 @@ void gestao()
 													atlet.medalhas.bronze = atletas[i].medalhas.bronze+1;
 													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
-												    medalhasdist.id = 1;
-													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
-													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
-													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
-													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
-													
-													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
-													
+												    strcpy(ppais , atlet.pais);
+												    strcpy(mmod , atlet.modalidade); 
 													
 													fwrite(&atlet, sizeof(Atleta),1,at);
 													
+												
+														 
+													}
+													else
+													{
+													atlet.idNUm = atletas[i].idNUm;
+													strcpy(atlet.nome , atletas[i].nome);
+													strcpy(atlet.sobrenome , atletas[i].sobrenome);
+													strcpy(atlet.pais , atletas[i].pais);
+													strcpy(atlet.modalidade , atletas[i].modalidade);
+													atlet.medalhas.ouro = atletas[i].medalhas.ouro;
+													atlet.medalhas.prata = atletas[i].medalhas.prata;
+													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
+													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
 													
-													int pa = 0;
+												
+													
+													fwrite(&atlet,sizeof(Atleta),1,at);
+													}
+														
+												}
+														
+														int pa = 0;
 													
 													for(pa = 0; pa < idPa; pa++)
 													{
-														if(strcmp(atletas[i].pais, paises[pa].nomes)== 0)
+														
+															
+														if(strcmp(ppais, paises[pa].nomes) == 0)
 														{
 															pai.idNUm = paises[pa].idNUm;
 															strcpy(pai.nomes, paises[pa].nomes);
@@ -1715,84 +1751,39 @@ void gestao()
 															
 															fwrite(&pai, sizeof(Paises),1,p);
 														 } 
-												 	  }
-												 	  
-												 	  	int moda  = 0;
+															
+													 }
+														 
+														int moda  = 0;
 													
 														for(moda = 0; moda < idMod; moda++)
 														{
-															if(strcmp(atletas[i].modalidade, modalidades[moda].modalidades)== 0)
-															{
-																modalid.idNUm = modalidades[moda].idNUm;
-																strcpy(modalid.modalidades, modalidades[moda].modalidades);
-																modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
-																modalid.medalhas.prata = modalidades[moda].medalhas.prata;
-																modalid.medalhas.bronze = modalidades[moda].medalhas.bronze+1;
-																modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-																
-																fwrite(&modalid, sizeof(Modalidades),1,modal);
-															 }
-															 else
-															 {
-															 	modalid.idNUm = modalidades[moda].idNUm;
-																strcpy(modalid.modalidades, modalidades[moda].modalidades);
-																modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
-																modalid.medalhas.prata = modalidades[moda].medalhas.prata;
-																modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
-																modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-																
-																fwrite(&modalid, sizeof(Modalidades),1,modal);
-															 } 
-														 
-														}
-													
-												}
-												
-												else
-												{
-													atlet.idNUm = atletas[i].idNUm;
-													strcpy(atlet.nome , atletas[i].nome);
-													strcpy(atlet.sobrenome , atletas[i].sobrenome);
-													strcpy(atlet.pais , atletas[i].pais);
-													strcpy(atlet.modalidade , atletas[i].modalidade);
-													atlet.medalhas.ouro = atletas[i].medalhas.ouro;
-													atlet.medalhas.prata = atletas[i].medalhas.prata;
-													atlet.medalhas.bronze = atletas[i].medalhas.bronze;
-													atlet.medalhas.total = atlet.medalhas.ouro + atlet.medalhas.prata + atlet.medalhas.bronze;
-													
-													pai.idNUm = paises[i].idNUm;
-													strcpy(pai.nomes, paises[i].nomes);
-													pai.medalhas.ouro = paises[i].medalhas.ouro;
-													pai.medalhas.prata = paises[i].medalhas.prata;
-													pai.medalhas.bronze = paises[i].medalhas.bronze;
-													pai.medalhas.total = pai.medalhas.ouro + pai.medalhas.prata + pai.medalhas.bronze;
-													
-													fwrite(&pai, sizeof(Paises),1,p);
-													
-													
-													modalid.idNUm = modalidades[i].idNUm;
-													strcpy(modalid.modalidades, modalidades[i].modalidades);
-													modalid.medalhas.ouro = modalidades[i].medalhas.ouro;
-													modalid.medalhas.prata = modalidades[i].medalhas.prata;
-													modalid.medalhas.bronze = modalidades[i].medalhas.bronze;
-													modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
-													
-													fwrite(&modalid, sizeof(Modalidades),1,modal);
-													
-													medalhasdist.id = 1;
-													medalhasdist.ouro = (atlet.medalhas.ouro - medalhas.ouro) + medalhas.ouro;
-													medalhasdist.prata = (atlet.medalhas.prata - medalhas.prata) +  medalhas.prata;
-													medalhasdist.bronze = (atlet.medalhas.bronze - medalhas.bronze) +  medalhas.bronze;
-													medalhasdist.total = medalhasdist.ouro + medalhasdist.prata + medalhasdist.bronze;
-													
-													fwrite(&medalhasdist, sizeof(Medalhas),1,med);
-													
-													fwrite(&atlet,sizeof(Atleta),1,at);
-												}
-												
-												
-												
-										}
+															
+																if(strcmp(mmod, modalidades[moda].modalidades)== 0)
+																{
+																	modalid.idNUm = modalidades[moda].idNUm;
+																	strcpy(modalid.modalidades, modalidades[moda].modalidades);
+																	modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
+																	modalid.medalhas.prata = modalidades[moda].medalhas.prata;
+																	modalid.medalhas.bronze = modalidades[moda].medalhas.bronze+1;
+																	modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+																	
+																	fwrite(&modalid, sizeof(Modalidades),1,modal);
+																 }
+																 else
+																 {
+																 	modalid.idNUm = modalidades[moda].idNUm;
+																	strcpy(modalid.modalidades, modalidades[moda].modalidades);
+																	modalid.medalhas.ouro = modalidades[moda].medalhas.ouro;
+																	modalid.medalhas.prata = modalidades[moda].medalhas.prata;
+																	modalid.medalhas.bronze = modalidades[moda].medalhas.bronze;
+																	modalid.medalhas.total = modalid.medalhas.ouro + modalid.medalhas.prata + modalid.medalhas.bronze;
+																	
+																	fwrite(&modalid, sizeof(Modalidades),1,modal);
+																 } 
+														
+															
+													}
 											
 										
 											
@@ -1852,6 +1843,7 @@ void gestao()
 												
 												
 											}
+											
 											
 										     	sleep(2);
 												menuprincipal();
@@ -2127,6 +2119,7 @@ void cadastroAtletas(){
 							printf("Id: %d \n",atleta[i].idNUm);
 							printf("Nome: %s \n",atleta[i].nome);
 							printf("Sobrenome: %s \n", atleta[i].sobrenome);
+							printf("Pais: %s \n", atleta[i].pais);
 							printf("Modalidade: %s \n",atleta[i].modalidade);
 							printf("Medalhas de ouro: %d \n",atleta[i].medalhas.ouro);
 							printf("Medalhas de prata: %d \n",atleta[i].medalhas.prata);
@@ -3209,7 +3202,7 @@ void modalidades(){
   			
   			
   			
-		 	printf ("id = %d ", ultimoid); 
+		 	//printf ("id = %d ", ultimoid); 
 		}
 		
 			printf("---------------------------------------------------------------------------------------------\n");
