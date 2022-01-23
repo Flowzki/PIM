@@ -126,7 +126,7 @@ typedef struct{
 	Data dataTermino;
 	int quantpais;
 	int quantmod;
-	Medalhas medentregues;
+	
 }Evento;
 
 //Fim Structs
@@ -1043,7 +1043,7 @@ void gestao()
 	FILE *atleta, *at;
 	FILE *pais, *p;
 	FILE *modalidade, *modal ;
-	FILE *evento, *ev;
+	FILE *evento;
 	
 	char caminho[] = "C:/Gestao Olimpiada/medalhas.txt";
 	char caminhomed[] = "C:/Gestao Olimpiada/medalhasdistribuidas.txt";
@@ -1055,7 +1055,7 @@ void gestao()
 	char caminho3[] = "C:/Gestao Olimpiada/modalidades.txt";
 	char caminhomod[] = "C:/Gestao Olimpiada/modalidade.txt";
 	char caminho4[] = "C:/Gestao Olimpiada/eventos.txt";
-	char caminho5[] = "C:/Gestao Olimpiada/evento.txt";
+	
 	
 	char ppais[20]; 
 	char mmod[20]; 
@@ -1074,7 +1074,7 @@ void gestao()
 	modalidade = fopen(caminho3, "r");	
 	modal = fopen(caminhomod, "w");	
 	evento = fopen(caminho4, "r");	
-	ev = fopen(caminho5, "a+");
+	
 	
 	idMed = ultimo_id(caminho, "medalha");
 	idAt = ultimo_id(caminho1, "atleta");
@@ -1298,9 +1298,7 @@ void gestao()
 							}
 						
 							
-							
 						
-							
 							if(paisparticipou && modparticipou)
 							{
 								printf("Qual medalha o atleta irá receber ?\n");
@@ -1309,7 +1307,7 @@ void gestao()
 								
 								if(medalhaRecebida > 0 && medalhaRecebida < 4)
 								{
-									if(medalhaRecebida == 1 && eventos[even].medentregues.ouro == 0)
+									if(medalhaRecebida == 1)
 									{
 									
 											medalhasdist.id = 1;
@@ -1321,24 +1319,7 @@ void gestao()
 											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
 											fclose(med);
 											
-											i = 0;
-											
-											for(i = 0; i < idEv; i++ )
-											{
-												if(eventos[i].idNum == even)
-												{
-													events = eventos[even];
-													events.medentregues.ouro = 1;
-													events.medentregues.total = events.medentregues.ouro + eventos[even].medentregues.prata + eventos[even].medentregues.bronze;											
-													fwrite(&events,sizeof(Evento),1,ev);
-												}
-												else{
-													events = eventos[i];		
-													fwrite(&events,sizeof(Evento),1,ev);
-												}
-											}
-											
-											
+										
 									
 										i = 0;
 										for(i = 0; i< idAt;i++){
@@ -1452,7 +1433,7 @@ void gestao()
 											fclose(at);
 											fclose(p);
 											fclose(modal);
-											fclose(ev);
+											
 											
 										
 											
@@ -1470,8 +1451,7 @@ void gestao()
 												med = fopen(caminhomedist, "r");
 												medDist = fopen(caminhomed, "w");
 												
-												ev = fopen(caminho5, "r");
-												evento = fopen(caminho4, "w");
+												
 												
 												while(fread(&atlet, sizeof(Atleta),1,at))
 												{
@@ -1493,10 +1473,6 @@ void gestao()
 													fwrite(&medalhasdist, sizeof(Medalhas),1,medDist);
 												}
 												
-												while(fread(&events, sizeof(Evento),1,ev))
-												{
-													fwrite(&events, sizeof(Evento),1,evento);
-												}
 												
 												printf("Dados salvos com sucesso!!\n\n");
 												
@@ -1512,9 +1488,7 @@ void gestao()
 												fclose(medDist);
 												fclose(med);
 												remove(caminhomedist);
-												fclose(ev);
-												fclose(evento);
-												remove(ev);
+											
 											}
 											
 											
@@ -1523,7 +1497,7 @@ void gestao()
 											menuprincipal();
 																
 									}
-									else if(medalhaRecebida == 2 && eventos[even].medentregues.prata == 0)
+									else if(medalhaRecebida == 2)
 									{
 										
 										
@@ -1537,22 +1511,7 @@ void gestao()
 											fclose(med);
 											
 											
-											i = 0;
-											
-											for(i = 0; i < idEv; i++ )
-											{
-												if(eventos[i].idNum == even)
-												{
-													events = eventos[even];
-													events.medentregues.prata = 1;
-													events.medentregues.total = eventos[even].medentregues.ouro + events.medentregues.prata + eventos[even].medentregues.bronze;											
-													fwrite(&events,sizeof(Evento),1,ev);
-												}
-												else{
-													events = eventos[i];		
-													fwrite(&events,sizeof(Evento),1,ev);
-												}
-											}
+										
 											
 									
 										i = 0;
@@ -1667,11 +1626,11 @@ void gestao()
 											fclose(p);
 											fclose(modal);
 											fclose(med);
-											fclose(ev);
+											
 											
 											if(encontrou)
 											{
-													at = fopen(caminhoat, "r");
+											at = fopen(caminhoat, "r");
 												atleta = fopen(caminho1, "w");
 										
 												p = fopen(caminhopa, "r");
@@ -1683,8 +1642,7 @@ void gestao()
 												med = fopen(caminhomedist, "r");
 												medDist = fopen(caminhomed, "w");
 												
-												ev = fopen(caminho5, "r");
-												evento = fopen(caminho4, "w");
+												
 												
 												while(fread(&atlet, sizeof(Atleta),1,at))
 												{
@@ -1706,10 +1664,6 @@ void gestao()
 													fwrite(&medalhasdist, sizeof(Medalhas),1,medDist);
 												}
 												
-												while(fread(&events, sizeof(Evento),1,ev))
-												{
-													fwrite(&events, sizeof(Evento),1,evento);
-												}
 												
 												printf("Dados salvos com sucesso!!\n\n");
 												
@@ -1725,15 +1679,12 @@ void gestao()
 												fclose(medDist);
 												fclose(med);
 												remove(caminhomedist);
-												fclose(ev);
-												fclose(evento);
-												remove(ev);
 											}
 											
 											sleep(2);
 											menuprincipal();
 									}
-									else if(medalhaRecebida == 3  && eventos[even].medentregues.bronze == 0)
+									else if(medalhaRecebida == 3)
 									{
 										
 											medalhasdist.id = 1;
@@ -1745,22 +1696,8 @@ void gestao()
 											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
 											fclose(med);
 											
-											i = 0;
-											
-											for(i = 0; i < idEv; i++ )
-											{
-												if(eventos[i].idNum == even)
-												{
-													events = eventos[even];
-													events.medentregues.bronze = 1;
-													events.medentregues.total = eventos[even].medentregues.ouro + eventos[even].medentregues.prata + events.medentregues.bronze;											
-													fwrite(&events,sizeof(Evento),1,ev);
-												}
-												else{
-													events = eventos[i];		
-													fwrite(&events,sizeof(Evento),1,ev);
-												}
-											}
+										
+										
 											
 									
 										i = 0;
@@ -1876,11 +1813,11 @@ void gestao()
 											fclose(at);
 											fclose(modal);
 											fclose(med);
-											fclose(ev);
+										
 											
 											if(encontrou)
 											{
-												at = fopen(caminhoat, "r");
+											at = fopen(caminhoat, "r");
 												atleta = fopen(caminho1, "w");
 										
 												p = fopen(caminhopa, "r");
@@ -1892,8 +1829,7 @@ void gestao()
 												med = fopen(caminhomedist, "r");
 												medDist = fopen(caminhomed, "w");
 												
-												ev = fopen(caminho5, "r");
-												evento = fopen(caminho4, "w");
+												
 												
 												while(fread(&atlet, sizeof(Atleta),1,at))
 												{
@@ -1915,10 +1851,6 @@ void gestao()
 													fwrite(&medalhasdist, sizeof(Medalhas),1,medDist);
 												}
 												
-												while(fread(&events, sizeof(Evento),1,ev))
-												{
-													fwrite(&events, sizeof(Evento),1,evento);
-												}
 												
 												printf("Dados salvos com sucesso!!\n\n");
 												
@@ -1934,9 +1866,6 @@ void gestao()
 												fclose(medDist);
 												fclose(med);
 												remove(caminhomedist);
-												fclose(ev);
-												fclose(evento);
-												remove(ev);
 												
 												
 											}
@@ -4825,10 +4754,7 @@ void eventos(){
 					
 					}
 					
-					eventos.medentregues.ouro = 0;
-					eventos.medentregues.prata = 0;
-					eventos.medentregues.bronze = 0;
-					eventos.medentregues.total = 0;
+				
 					
 					printf("Data inicio: %2d/%02d/%d\n", eventos.dataInico.dia, eventos.dataInico.mes, eventos.dataInico.ano);
 					printf("Hora inicio: %02d:%02d\n", eventos.dataInico.hora, eventos.dataInico.minuto);
