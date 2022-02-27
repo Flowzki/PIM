@@ -1358,13 +1358,14 @@ void gestao()
 									if(strcmp(meddistevent[i].nome, eventos[even-1].nome) == 0 && meddistevent[i].ouro == true)
 									{
 										medEntregueOuro = true;
-									
+										
+										if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
+										{
+											recebeuMed = true;
+										}
 									}
 									
-									if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
-									{
-										recebeuMed = true;
-									}
+									
 									
 								}
 								
@@ -1374,12 +1375,14 @@ void gestao()
 									if(strcmp(meddistevent[i].nome, eventos[even-1].nome) == 0 && meddistevent[i].prata == true)
 									{
 										medEntreguePrata = true;
+										
+											if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
+											{
+												recebeuMed = true;
+											}
 									}	
 									
-									if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
-									{
-										recebeuMed = true;
-									}
+								
 								}
 								
 								i = 0;
@@ -1388,12 +1391,14 @@ void gestao()
 									if(strcmp(meddistevent[i].nome, eventos[even-1].nome) == 0 && meddistevent[i].bronze == true)
 									{
 										medEntregueBronze = true;
+										
+										if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
+										{
+											recebeuMed = true;
+										}
 									}
 									
-									if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
-									{
-										recebeuMed = true;
-									}
+								
 									
 								}	
 								
