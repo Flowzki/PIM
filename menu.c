@@ -129,6 +129,17 @@ typedef struct{
 	
 }Evento;
 
+typedef struct{
+	int idNum;
+	char nome[20];
+	char nomeAtleta[20];
+	bool ouro;
+	bool prata;
+	bool bronze;
+	
+	
+}MedDistsEventos;
+
 //Fim Structs
 
 
@@ -475,6 +486,20 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
+		
+		else if(strcmp(nome, "medalhadist")==0 && get_size(cam_arq) > 0)
+		{
+			MedDistsEventos medalhadist;
+			
+			fseek(file, -1*sizeof(medalhadist),SEEK_END);
+		  	fread(&medalhadist, sizeof(medalhadist), 1, file); 
+		  	id = medalhadist.idNum;
+		  	
+		  	fclose(file);
+		  	
+		  	return id;
+		}
+		
 		else
 		{	
 			return id;
@@ -1039,7 +1064,7 @@ void gestao()
 {
 	system("cls");
 	
-	FILE *medalha, *medDist, *med;
+	FILE *medalha, *medDist, *med, *medDistEv;
 	FILE *atleta, *at;
 	FILE *pais, *p;
 	FILE *modalidade, *modal ;
@@ -1055,13 +1080,15 @@ void gestao()
 	char caminho3[] = "C:/Gestao Olimpiada/modalidades.txt";
 	char caminhomod[] = "C:/Gestao Olimpiada/modalidade.txt";
 	char caminho4[] = "C:/Gestao Olimpiada/eventos.txt";
+	char caminho5[] = "C:/Gestao Olimpiada/medalhasdisteventos.txt";
 	
 	
 	char ppais[20]; 
 	char mmod[20]; 
 
-	int idMed, idAt, idPa, idMod, idEv, j, i, opcao, id, confirma, medalhaRecebida, even;
-	bool paisparticipou = false, modparticipou = false, encontrou = false;
+	int idMed, idAt, idPa, idMod, idEv, idMedDist, j, i, opcao, id, confirma, medalhaRecebida, even;
+	bool paisparticipou = false, modparticipou = false, encontrou = false, medEntregueOuro = false, medEntreguePrata = false, medEntregueBronze = false, recebeuMed = false;
+	char nomeAt[20];
 	
 
 	medalha = fopen(caminho, "r");	
@@ -1074,6 +1101,7 @@ void gestao()
 	modalidade = fopen(caminho3, "r");	
 	modal = fopen(caminhomod, "w");	
 	evento = fopen(caminho4, "r");	
+	medDistEv = fopen(caminho5, "a+");	
 	
 	
 	idMed = ultimo_id(caminho, "medalha");
@@ -1081,6 +1109,7 @@ void gestao()
 	idMod = ultimo_id(caminho3, "modalidade");
 	idEv = ultimo_id(caminho4, "evento");
 	idPa = ultimo_id(caminho2, "pais");
+	idMedDist = ultimo_id(caminho5, "medalhadist");
 	
 	Atleta atlet;
 	Medalhas medalhas;
@@ -1094,12 +1123,15 @@ void gestao()
 	Evento eventos[50];
 	Evento events;
 	Paises paises[100];
+	MedDistsEventos meddistevent[100];
+	MedDistsEventos meddistevents;
 
 	memset(&atlet, 0, sizeof(Atleta));
 	memset(&pai, 0, sizeof(Paises));
 	memset(&modalid, 0, sizeof(Modalidades));
 	memset(&medalhasdist, 0, sizeof(Medalhas));
 	memset(&events, 0, sizeof(Evento));
+	memset(&meddistevents, 0, sizeof(MedDistsEventos));
 	
 
 
@@ -1185,6 +1217,16 @@ void gestao()
 			fclose(evento);
 			
 			
+			i = 0;		
+			while(!feof(medDistEv))
+			{
+				fread(&meddistevents, sizeof(MedDistsEventos),1, medDistEv);
+				meddistevent[i] = meddistevents;
+				i++;		
+			}
+			
+			fclose(medDistEv);
+			
 			
 		}
 		else
@@ -1236,6 +1278,7 @@ void gestao()
 						sleep(2);
 						menuprincipal();
 					}
+					
 					
 					
 					printf("\nEscolha um dos atletas.\n\n");
@@ -1297,7 +1340,63 @@ void gestao()
 							
 							}
 						
+							//copia o nome do atleta para a variavel nomeAt, para verificar se o atleta já recebeu uma medalha do evento
+							i = 0;
+							for(i = 0; i< idAt;i++){
+											
+								if(atletas[i].idNUm == id)
+									{
+										strcpy(nomeAt, atletas[i].nome);
+										
+									}
+								}
+								
 							
+								i = 0;
+								for(i = 0; i < idMedDist; i++ )
+								{
+									if(strcmp(meddistevent[i].nome, eventos[even-1].nome) == 0 && meddistevent[i].ouro == true)
+									{
+										medEntregueOuro = true;
+									
+									}
+									
+									if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
+									{
+										recebeuMed = true;
+									}
+									
+								}
+								
+								i = 0;
+								for(i = 0; i < idMedDist; i++ )
+								{
+									if(strcmp(meddistevent[i].nome, eventos[even-1].nome) == 0 && meddistevent[i].prata == true)
+									{
+										medEntreguePrata = true;
+									}	
+									
+									if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
+									{
+										recebeuMed = true;
+									}
+								}
+								
+								i = 0;
+								for(i = 0; i < idMedDist; i++ )
+								{
+									if(strcmp(meddistevent[i].nome, eventos[even-1].nome) == 0 && meddistevent[i].bronze == true)
+									{
+										medEntregueBronze = true;
+									}
+									
+									if(strcmp(meddistevent[i].nomeAtleta, nomeAt) == 0)
+									{
+										recebeuMed = true;
+									}
+									
+								}	
+								
 						
 							if(paisparticipou && modparticipou)
 							{
@@ -1305,9 +1404,12 @@ void gestao()
 								printf(" [1] Ouro \n [2] Prata \n [3] Bronze\n");
 								scanf("%d", &medalhaRecebida);
 								
+								
+								
 								if(medalhaRecebida > 0 && medalhaRecebida < 4)
 								{
-									if(medalhaRecebida == 1)
+									
+									if(medalhaRecebida == 1 && medEntregueOuro == false && recebeuMed == false)
 									{
 									
 											medalhasdist.id = 1;
@@ -1319,6 +1421,27 @@ void gestao()
 											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
 											fclose(med);
 											
+											medDistEv = fopen(caminho5,"a");
+											
+											meddistevents.idNum = idMedDist+1;
+											strcpy(meddistevents.nome, eventos[even-1].nome);
+											meddistevents.ouro = true;
+											meddistevents.prata = false;
+											meddistevents.bronze = false;
+											
+											i = 0;
+											for(i = 0; i< idAt;i++){
+												
+												if(atletas[i].idNUm == id)
+											    {
+											    	strcpy(meddistevents.nomeAtleta, atletas[i].nome);
+												}
+											
+											}
+									
+											fseek(medDistEv,0,SEEK_END);
+											fwrite(&meddistevents, sizeof(MedDistsEventos),1,medDistEv);
+											fclose(medDistEv);	
 										
 									
 										i = 0;
@@ -1497,7 +1620,7 @@ void gestao()
 											menuprincipal();
 																
 									}
-									else if(medalhaRecebida == 2)
+									else if(medalhaRecebida == 2 && medEntreguePrata == false && recebeuMed == false)
 									{
 										
 										
@@ -1510,7 +1633,27 @@ void gestao()
 											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
 											fclose(med);
 											
+											medDistEv = fopen(caminho5,"a");
 											
+											meddistevents.idNum = idMedDist+1;
+											strcpy(meddistevents.nome, eventos[even-1].nome);
+											meddistevents.prata = true;
+											meddistevents.ouro = false;
+											meddistevents.bronze = false;
+											
+											i = 0;
+											for(i = 0; i< idAt;i++){
+												
+												if(atletas[i].idNUm == id)
+											    {
+											    	strcpy(meddistevents.nomeAtleta, atletas[i].nome);
+												}
+											
+											}
+									
+											fseek(medDistEv,0,SEEK_END);
+											fwrite(&meddistevents, sizeof(MedDistsEventos),1,medDistEv);
+											fclose(medDistEv);	
 										
 											
 									
@@ -1684,7 +1827,7 @@ void gestao()
 											sleep(2);
 											menuprincipal();
 									}
-									else if(medalhaRecebida == 3)
+									else if(medalhaRecebida == 3 && medEntregueBronze == false && recebeuMed == false)
 									{
 										
 											medalhasdist.id = 1;
@@ -1696,7 +1839,26 @@ void gestao()
 											fwrite(&medalhasdist, sizeof(Medalhas),1,med);
 											fclose(med);
 											
-										
+											medDistEv = fopen(caminho5,"a");
+											meddistevents.idNum = idMedDist+1;
+											strcpy(meddistevents.nome, eventos[even-1].nome);
+											meddistevents.bronze = true;
+											meddistevents.prata = false;
+											meddistevents.ouro = false;
+											
+											i = 0;
+											for(i = 0; i< idAt;i++){
+												
+												if(atletas[i].idNUm == id)
+											    {
+											    	strcpy(meddistevents.nomeAtleta, atletas[i].nome);
+												}
+											
+											}
+											
+											fseek(medDistEv,0,SEEK_END);
+											fwrite(&meddistevents, sizeof(MedDistsEventos),1,medDistEv);
+											fclose(medDistEv);	
 										
 											
 									
