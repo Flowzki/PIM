@@ -101,6 +101,7 @@ typedef struct{
 	
 }CentroTreinamento;
 
+
 typedef struct{
 	int idNUm;
 	char equipamentos[40];
@@ -114,6 +115,22 @@ typedef struct{
 	int hora;
 	int minuto;
 }Data;
+
+
+typedef struct{
+	int id;
+	char mome[20];
+	CentroTreinamento centro;
+	Data dataInicio;
+	Data dataTermino;
+	Modalidades modalidades[100];
+	Paises paises[100];
+	Equipamentos equipamento[100];
+	int quantMod;
+	int quantPais;
+	
+}AgendaTreinamento;
+
 
 typedef struct{
 	int idNum;
@@ -189,6 +206,10 @@ void equipamentos();
 
 //Função para cadastrar locais de treinamento
 void centroTreinamento();
+
+//Função para agendar treinamentos
+void agendarTreinamentos();
+
 
 //Função para cadastrar eventos
 void eventos();
@@ -499,6 +520,19 @@ int ultimo_id(const char* cam_arq, char *nome)
 		  	
 		  	return id;
 		}
+		else if(strcmp(nome, "treinamentos")==0 && get_size(cam_arq) > 0)
+		{
+			AgendaTreinamento treinamentos;
+			
+			fseek(file, -1*sizeof(treinamentos),SEEK_END);
+		  	fread(&treinamentos, sizeof(treinamentos), 1, file); 
+		  	id = treinamentos.id;
+		  	
+		  	fclose(file);
+		  	
+		  	return id;
+		}
+		
 		
 		else
 		{	
@@ -697,8 +731,13 @@ void cadastros(int cadastros){
 				system("cls");
 				eventos();
 				break;
-								
+				
 			case 9:
+				system("cls");
+				agendarTreinamentos();
+				break;	
+								
+			case 10:
 				system("cls");
 				medalhasOlimpicas();
 				break;					
@@ -751,13 +790,13 @@ void menus(int opcao){
 						printf("---------------------------------------------------------------------------------------------\n");
 						printf("                                   CADASTROS \n");
 						printf("---------------------------------------------------------------------------------------------\n\n");
-						printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Eventos \n [9] Medalhas \n [10] Voltar \n\n");
+						printf(" [1] Pessoas \n [2] Paises \n [3] Modalidades \n [4] Alojamentos\n [5] Locais de Jogos\n [6] Equipamentos \n [7] Centro de treinamento\n [8] Eventos \n [9] Agendar Treinamentos \n [10] Medalhas \n [11] Voltar \n\n");
 						printf(" Escolha uma das opcoes: \n");
 						scanf("%d", &cadastro);
 						
-						if(cadastro > 0 && cadastro < 10 )
+						if(cadastro > 0 && cadastro < 11 )
 							cadastros(cadastro);	
-						else if(cadastro == 10)
+						else if(cadastro == 11)
 						{
 							//sleep(1);
 							menuprincipal();
@@ -4950,6 +4989,7 @@ void eventos(){
 						else
 						{
 							fclose(evento);
+							
 						}
 						
 					}
@@ -5005,8 +5045,8 @@ void eventos(){
 						
 					}
 				}
-		
-			
+				
+				
 			
 		}while(sair!= 0);
 		
@@ -5019,6 +5059,636 @@ void eventos(){
 	}
 	
 
+
+}
+
+
+void agendarTreinamentos(){
+
+	system("cls");
+
+	FILE *agendamentos;
+	FILE *paises;
+	FILE *modalidades;
+	FILE *centros;
+	
+	char caminho1[] = "C:/Gestao Olimpiada/paises.txt";
+	char caminho2[] = "C:/Gestao Olimpiada/modalidades.txt";
+	char caminho3[] = "C:/Gestao Olimpiada/treinamentos.txt";
+	char caminho4[] = "C:/Gestao Olimpiada/centrotreinamento.txt";
+	
+	int idPa, idMod, idAg, i=0, sair, dia, mes, ano, hora, minuto, difDia, idCentro, j=0, confirma, locais = 0, modali, pa, ver, quantpais;
+
+	
+	agendamentos = fopen(caminho3, "a+");
+	paises = fopen(caminho1, "r");
+	modalidades = fopen(caminho2, "r");
+	centros = fopen(caminho4, "r");
+	
+	idPa = ultimo_id(caminho1, "pais");
+	idMod = ultimo_id(caminho2, "modalidade");
+	idAg = ultimo_id(caminho3, "treinamentos");
+	idCentro = ultimo_id(caminho4, "centro");
+	
+	AgendaTreinamento treinamento;
+	Modalidades mods[100];
+	Modalidades mod;
+	Paises paise[100];
+	Paises pais;
+	CentroTreinamento centro;
+	CentroTreinamento cents[100];
+	
+	memset(&treinamento,0,sizeof(AgendaTreinamento));
+	
+	
+	
+	
+	if(agendamentos != NULL && paises != NULL && modalidades != NULL )
+	{
+		
+		if(idPa > 0 && idMod > 0 && idCentro > 0)
+			{
+					while(!feof(paises))
+					{
+						fread(&pais,sizeof(Paises),1,paises);
+						paise[i] = pais;
+						i++;
+					}
+					
+					fclose(paises);
+					
+					i = 0;
+					while(!feof(modalidades))
+					{
+						fread(&mod,sizeof(Modalidades),1,modalidades);
+						mods[i] = mod;
+						i++;
+					}
+					
+					i = 0;
+					while(!feof(centros))
+					{
+						fread(&centro,sizeof(centro),1,centros);
+						cents[i] = centro;
+						i++;
+					}
+					
+					fclose(centros);
+			}
+			else
+			{
+				printf("Nenhum país, local de treinamento ou modalidade cadastradados!!\n");
+				sleep(2);
+				menuprincipal();
+			}
+		
+			
+		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   AGENDAR TREINAMENTOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+			
+		
+			
+			do
+			{
+			
+			sleep(1);	
+			system("cls");
+		
+			printf("---------------------------------------------------------------------------------------------\n");
+			printf("                                   AGENDAR TREINAMENTOS \n");
+			printf("---------------------------------------------------------------------------------------------\n\n");
+				
+				treinamento.id = idAg+1;
+				
+				printf("infome o nome do treimanmento.\n");
+				scanf("%s", &treinamento.mome);
+				
+				printf("Informe o dia de inicio:\n");
+				scanf("%d", &dia);
+				
+				printf("Informe o mês:\n");
+				scanf("%d", &mes);
+				
+				treinamento.dataInicio.ano = 2024;
+				
+			
+					while(!validarData(dia, mes,treinamento.dataInicio.ano))
+					{
+						system("cls");
+						printf("\n");	
+						printf("Informe novanente a data e hora de inicio do treinamento.\n");
+						printf("Insira o dia:\n");
+						scanf("%d", &dia);
+						
+						printf("Insira o mês:\n");
+						scanf("%d", &mes);
+							
+					}
+				
+						if(mes > 5 && mes <= 8)
+						{
+								treinamento.dataInicio.mes = mes;
+								treinamento.dataInicio.dia = dia;
+										
+						}
+						else
+						{
+							printf("Periodo invalido!\n");
+							sleep(2);
+							menuprincipal();
+						}
+				
+				
+						printf("Informe a hora de inicio:\n");
+						scanf("%d", &hora);
+						
+						printf("informe o minuto:\n");
+						scanf("%d", &minuto);
+				
+					while(!validahora(hora, minuto))
+					{
+						system("cls");
+						printf("Insira novamente a hora de inicio.\n");
+						scanf("%d", &hora);
+						
+						printf("Insira novamente o minuto.\n");
+						scanf("%d", &minuto);
+					}
+				
+					treinamento.dataInicio.hora = hora;
+					treinamento.dataInicio.minuto = minuto;
+					
+					
+					printf("\n");	
+					printf("Informe a data e hora final do treinamento.\n");
+					printf("Insira o dia:\n");
+					scanf("%d", &dia);
+					
+					treinamento.dataTermino.mes = treinamento.dataInicio.mes;
+					
+					while(!validarData(dia, treinamento.dataTermino.mes, treinamento.dataInicio.ano))
+					{
+						system("cls");
+						printf("\n");	
+						printf("Informe novamnente a data e hora final do evento.\n");
+						printf("Insira o dia:\n");
+						scanf("%d", &dia);
+					
+					}
+					
+					
+					
+					if(treinamento.dataTermino.mes > 5 && treinamento.dataTermino.mes <= 8)
+					{
+						if(dia >= treinamento.dataInicio.dia)
+							{
+								difDia = dia - treinamento.dataInicio.dia;
+							
+								if(difDia > 1)
+								{
+									printf("Data final deve ser menor que 2 dias!!\n");
+									sleep(2);
+									menuprincipal();
+								}
+								else
+								{
+									treinamento.dataTermino.dia = dia;
+								}
+							}
+							else
+							{
+								printf("Dia inválido.\n");
+								sleep(2);
+								menuprincipal();
+							}		
+					}
+					else
+					{
+						printf("Periodo invalido!\n");
+						sleep(2);
+						menuprincipal();
+					}
+				
+				treinamento.dataTermino.ano = 2024;
+				
+				printf("Insira a hora de termino.\n");
+				scanf("%d", &hora);
+				
+				printf("Insira o minuto.\n");
+				scanf("%d", &minuto);
+				
+				while(!validahora(hora, minuto))
+				{
+						system("cls");
+						printf("Insira novamente a hora de inicio.\n");
+						scanf("%d", &hora);
+						
+						printf("Insira novamente o minuto.\n");
+						scanf("%d", &minuto);
+				}
+					
+				if(treinamento.dataTermino.dia == treinamento.dataInicio.dia )
+				{
+					
+					if(hora == treinamento.dataInicio.hora && minuto > treinamento.dataInicio.minuto)
+					{
+						treinamento.dataTermino.hora = hora;
+						treinamento.dataTermino.minuto = minuto;
+					}
+					else if(hora > treinamento.dataInicio.hora && minuto <= treinamento.dataInicio.minuto || hora > treinamento.dataInicio.hora && minuto >= treinamento.dataInicio.minuto)
+					{
+							treinamento.dataTermino.hora = hora;
+							treinamento.dataTermino.minuto = minuto;
+					}
+					
+					else
+					{
+						printf("Hora ou minuto invalidos.\n");
+						sleep(2);
+						menuprincipal();
+					}
+							
+				}
+				else if(treinamento.dataTermino.dia > treinamento.dataInicio.dia )
+				{
+					
+					if(hora >= treinamento.dataInicio.hora || minuto >= treinamento.dataInicio.minuto || hora <= treinamento.dataInicio.hora || minuto <= treinamento.dataInicio.minuto)
+					{
+						treinamento.dataTermino.hora = hora;
+						treinamento.dataTermino.minuto = minuto;
+						
+					}
+					else
+					{
+						printf("Hora ou minuto invalidos.\n");
+						sleep(2);
+						menuprincipal();	
+					}	
+				}
+				else 
+				{
+					printf("Dia, hora ou minutos invalidos.\n");
+					sleep(2);
+					menuprincipal();
+				}		
+				
+				
+					j=0;
+			
+					printf("Escolha o local do treinamento.\n");
+					printf("\n");
+					
+					while(j<idCentro){
+						printf(" [%d] %s \n", j+1, cents[j].nome);
+						j++;
+					}
+					
+					
+					printf("\n");
+					printf("Insira o local:\n");
+					scanf("%d", &locais);
+				
+					
+					
+					if(locais > 0 && locais <= idCentro)
+					{
+							strcpy(treinamento.centro.nome , cents[locais-1].nome);
+					}
+					else
+					{
+							printf("Opção inválida!!\n");
+							sleep(2);
+							menuprincipal();		
+					}
+			
+						j=0;
+						
+						printf("Escolha quais as modalidades.\n");
+						printf("\n");
+						
+						while(j<idMod){
+							printf(" [%d] %s \n", j+1, mods[j].modalidades);
+							j++;
+						}
+						
+						printf("\n");
+						printf("Insira a quantidade de modalidades ou 0 ou %d para todas:\n", idMod);
+						scanf("%d", &modali);
+						
+						while(modali > idMod)
+						{
+							printf("Quantidade invalida!!\n");
+							printf("\n");
+							printf("Insira a quantidade de modalidades:\n");
+							scanf("%d", &modali);
+							
+						};
+						
+						if(modali == 0 || modali == idMod)
+						{
+							i=0;
+							
+								treinamento.quantMod = idMod;
+						
+								while(i < idMod)
+								{
+									strcpy(treinamento.modalidades[i].modalidades , mods[i].modalidades);
+									i++;
+								}
+								printf("\n");
+								printf("Todos as modalidades foram incluídas no evento %s.\n", treinamento.mome);
+								printf("\n");
+						}
+						else if(modali == 1)
+						{
+							printf("Escolha a modalidade:\n");
+							scanf("%d", &pa);
+							
+							treinamento.quantMod = 1;
+							
+							if(pa > 0 && pa <= idMod)
+							{
+									strcpy(treinamento.modalidades[0].modalidades , mods[pa-1].modalidades);
+							}
+							else
+							{
+									printf("Opção inválida!!\n");
+									sleep(2);
+									menuprincipal();		
+							}
+						}
+						else if(modali > 0 && modali <= idMod)
+						{
+							i=0;
+						
+							treinamento.quantMod = modali;
+						
+							while(i < modali)
+							{
+								if(modali > idMod)
+								{
+									printf("Quantidade invalida!!\n");
+									printf("\n");
+									printf("Insira as modalidades:\n");
+									scanf("%d", &modali);
+								}
+							
+								
+								printf("Escolha a %d modalidade:\n", i+1);
+								scanf("%d", &pa);
+								
+								if(pa > 0 && pa <= idMod)
+								{
+										strcpy(treinamento.modalidades[0].modalidades , mods[pa-1].modalidades);
+								}
+								else
+								{
+										printf("Opção inválida!!\n");
+										sleep(2);
+										menuprincipal();		
+								}
+								
+								i++;
+							}
+							
+						}
+						else
+						{
+							printf("Quantidade invalida!!\n");
+							printf("\n");
+							sleep(2);
+							menuprincipal();
+						}
+						
+						
+				printf("Escolha os paises participantes.\n");
+				printf("\n");
+				j = 0;
+				while(j<idPa){
+					
+					printf(" [%d] %s \n", j+1, paise[j].nomes);
+					j++;
+				}
+				
+				printf("\n");
+				printf("Insira quantos paises vão participar.\nOu para adicionar todos da lista digite 0 ou %d.\n", idPa);
+				scanf("%d", &quantpais);
+				
+					while(quantpais > idPa || quantpais < 0)
+					{
+						system("cls");
+						printf("Quantidade inválida.\n");
+						printf("\n");
+						printf("Insira novamente quantos paises vão participar:\n");
+						scanf("%d", &quantpais);
+					}
+					
+				  if(quantpais == 0 || quantpais == idPa )
+					{
+						i=0;
+					
+						treinamento.quantPais = idPa;
+				
+						while(i < idPa)
+						{
+							strcpy(treinamento.paises[i].nomes , paise[i].nomes);
+							i++;
+						}
+						printf("\n");
+						printf("Todos os países foram incluídos no evento %s.\n", treinamento.mome);
+						printf("\n");
+					}
+					else if (quantpais == 1)
+					{
+						treinamento.quantPais = 1;
+						
+						
+						printf("Escolha o pais:\n");
+						scanf("%d", &pa);
+						
+						if(pa > 0 && pa <= idPa)
+						{
+							
+								strcpy(treinamento.paises[0].nomes , paise[pa-1].nomes);
+						}
+						else
+						{
+								printf("Opção inválida!!\n");
+								sleep(2);
+								menuprincipal();		
+						}
+					}
+					else
+					{
+						
+						i=0;
+						
+						while(i < quantpais)
+						{
+								treinamento.quantPais = quantpais;
+								
+							
+								printf("Escolha o %d pais:\n", i+1);
+								scanf("%d", &pa);
+								
+								if(pa > 0 && pa <= idPa)
+								{
+								
+									strcpy(treinamento.paises[i].nomes , paise[pa-1].nomes);
+										
+								}
+								else
+								{
+										printf("Opção inválida!!\n");
+										sleep(2);
+										menuprincipal();		
+								}
+								
+								i++;
+						}
+					}		
+						
+						
+				printf("Deseja ver as informações inseridas ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+				scanf("%d", &ver);
+		
+				if(ver == 1)
+				{
+					printf("Os dados inseridos foram.\n\n");
+					printf("Id %d\n", treinamento.id);
+					printf("Nome do treinamento: %s\n", treinamento.mome);
+				
+					
+					if(quantpais == 0 || quantpais == idPa)
+					{
+						printf("Paises participantes: Todos\n");	
+					}
+					else if (quantpais > 1)
+					{
+						j = 0;
+					
+						while(j<quantpais)
+						{
+						
+							printf("Pais %d %s \n", j+1, treinamento.paises[j].nomes);
+							j++;
+						
+						}
+					}
+					else
+					{
+						printf("Paises participantes: %s\n", treinamento.paises[0].nomes);	
+					
+					}
+					
+				
+					
+					printf("Data inicio: %2d/%02d/%d\n", treinamento.dataInicio.dia, treinamento.dataInicio.mes, treinamento.dataInicio.ano);
+					printf("Hora inicio: %02d:%02d\n", treinamento.dataInicio.hora, treinamento.dataInicio.minuto);
+					printf("Data término: %02d/%02d/%d\n", treinamento.dataTermino.dia, treinamento.dataTermino.mes, treinamento.dataTermino.ano);
+					printf("Hora término: %02d:%02d\n\n", treinamento.dataTermino.hora, treinamento.dataTermino.minuto);
+					
+					printf("Confirma as informações ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(agendamentos, 0, SEEK_END);
+						fwrite(&treinamento, sizeof(AgendaTreinamento),1, agendamentos);
+					
+						
+						printf("Dados salvos com sucesso!!\n");
+						printf("\n\n");
+						printf("Deseja cadastrar mais eventos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+						
+						if(sair == 1)
+						{
+							
+							idAg = treinamento.id;
+						}
+						else
+						{
+							fclose(agendamentos);
+						}
+						
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						printf("\n\n");
+						printf("Deseja cadastrar mais treinamentos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+						
+						if(sair != 1)
+						{
+							fclose(agendamentos);
+							
+						}
+						
+					}
+					
+				}
+				else
+				{
+					printf("Confirma as informações ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+					scanf("%d", &confirma);
+					
+					if(confirma == 1)
+					{
+						fseek(agendamentos, 0, SEEK_END);
+						fwrite(&treinamento, sizeof(AgendaTreinamento),1, agendamentos);
+						
+						printf("Dados salvos com sucesso!!\n");
+						printf("Deseja cadastrar mais treinamentos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+						
+						if(sair == 1)
+						{
+							idPa = treinamento.id;
+							
+						}
+						else
+						{
+							fclose(agendamentos);
+							
+						}
+					}
+					else
+					{
+						printf("Os dados não foram salvos!!\n");
+						printf("Deseja cadastrar mais eventos ?\nDigite 1 para SIM ou 0 para NÃO.\n");
+						scanf("%d", &sair);
+						
+						if(sair != 1)
+						{
+							fclose(agendamentos);
+							
+						}
+						
+					}
+				}		
+				
+				
+			}while(sair != 0);
+			
+			if(sair == 0)
+			{
+				sleep(2);
+				menuprincipal();
+			}	
+			
+	}
+	else
+	{
+		printf("Nenhum país ou modalidade cadastradados!!\n");
+		sleep(2);
+		menuprincipal();
+	}
+	
+	
 
 }
 
